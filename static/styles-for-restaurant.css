@@ -1,0 +1,214 @@
+body {
+    background-color: #faf7f5;
+    color: rgb(53, 12, 52);
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h1,h2,h3,h4,h5{
+    font-weight: normal;
+    background: rgba(244, 202, 255, 0.35);
+    margin: 0;
+    color: rgb(60, 20, 60);
+}
+
+a, a:visited {
+    color: rgb(80, 20, 80);
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(120, 30, 120);
+    text-decoration: none;
+    background-color: #fff;
+}
+
+body {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #faf7f5;
+}
+
+header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #eaf4ff;
+    position: fixed;
+    top: 0px;
+    z-index: 999;
+    padding: 10px 20px;
+}
+
+footer {
+    width: 100%;
+    background: #eaf4ff;
+    position: fixed;
+    bottom: 0px;
+    padding: 10px;
+    text-align: center;
+}
+
+.wrapper {
+    border: 2px solid #d6c2d6;
+    max-width: 100%;
+    position: relative;
+    top: 50px;
+    padding-bottom: 50px;
+    background-color: #ffffff;
+}
+
+div.wrapper h1 {
+    text-align: center;
+    color: darkblue;
+    margin: 10px auto;
+    font-size: 2.4em;
+}
+
+div.wrapper h2 {
+    text-align: left;
+    color: darkblue;
+    margin: 5px auto;
+    font-size: 2em;
+}
+
+section {
+    border: 2px solid #c7b3c7;
+    position: relative;
+    padding-bottom: 4px;
+    background-color: #fff;
+}
+
+nav {
+    justify-self: end;
+    background: none;
+    color: darkblue;
+}
+
+nav li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+nav button {
+    background: none;
+    color: slategray;
+    font-family: Arial;
+    cursor: pointer; 
+    border: 0;
+    font-size: 1.2em;
+}
+
+.mc-table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.mc-table-head {
+    border: 1px dashed darkblue;
+    display: table-row;
+    font-size: 1.2em;
+}
+
+.mc-table-head .detail {
+    display: table-cell;
+    color: darkblue;
+    font-weight: bold;
+    background-color: #f5faff;
+    padding: 5px;
+    position: relative;
+}
+
+.mc-table-row  {
+    display: table-row;
+    border: 1px dashed darkblue;
+    background-color: white;
+}
+
+.mc-table-row .detail {
+    color: darkblue;
+    display: table-cell;
+    padding: 5px;
+}
+
+.mc-table-row .detail img {
+    max-height: 75px;
+    align-content: right;
+}
+
+.mc-table-row:hover {
+    background-color: #f0f8ff;
+    border: 1px solid;
+}
+
+.site-form {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.site-form input, .site-form textarea, .site-form select {
+    display: block;
+    margin: 5px 0 0 0;
+    padding: 5px;
+}
+
+.site-form input [type="submit"] {
+    background: slategray;
+    border: 0;
+    color: fff;
+    font-size: 1.2em;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+.helptext, .helptext.ul {
+    margin-top: 0 auto;
+    bottom: 20px;
+    color: #888;
+    font-size: 0.9em;
+}
+
+.errorlist li {
+    padding: 10px;
+    list-style-type: none;
+    border: 1px solid crimson;
+    color: crimson;
+    margin: 10px 0;
+}
+
+.errorlist {
+    padding: 0px;
+}
+
+@media screen and (max-width: 560px) {
+    header h1 {
+        font-size: 0.8em;
+    }
+
+    nav li {
+        display: block;
+        margin-left: 0px;
+        font-size: 14px;
+        width: 100%;
+    }
+    
+    nav button {
+        background: none;
+        color: slategray;
+        font-family: Arial;
+        cursor: pointer; 
+        border: 0;
+        font-size: 20px;
+    }
+
+    img {
+        max-width: 95%;
+    }
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+}

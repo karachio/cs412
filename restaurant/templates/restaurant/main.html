@@ -1,0 +1,24 @@
+{% extends 'restaurant/base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+<h1>Welcome to the Boston Restaurant</h1>
+
+
+<img src="{% static 'restaurant/boston_restaurant.jpeg' %}" alt="Burger" width="300">
+ 
+<h3>Address : 123 main street, Boston, MA</h3>
+
+<h3>Hours</h3>
+<ul class="hours">
+    <li>Monday: 9am – 5pm</li>
+    <li>Tuesday: 9am – 5pm</li>
+    <li>Wednesday: 9am – 5pm</li>
+    <li>Thursday: 9am – 5pm</li>
+    <li>Friday: 9am – 5pm</li>
+</ul>
+
+ <p>Page created by karachio@bu.edu</p>
+</div>
+{% endblock %}

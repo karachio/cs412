@@ -1,0 +1,57 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<div>
+
+<form method="POST" action="{% url 'confirmation' %}">
+    {% csrf_token %}
+
+    <h1>Menu Items</h1>
+
+    <input type="checkbox" name="burgers"> Burgers - $15
+
+    <input type="checkbox" name="english_muffin" value="1"> English Muffin
+    <input type="checkbox" name="croissant" value="1"> Croissant
+    <br><br>
+    <input type="checkbox" name="french_fries"> French Fries - $19
+    <br><br>
+    <input type="checkbox" name="french_toast"> French Toast - $5
+    <br><br>
+    <input type="checkbox" name="water"> Water - $3
+    <br><br>
+    <input type="checkbox" name="milkshake"> Milkshake - $21
+
+    
+<br><br>
+    <input type="checkbox" name="special">
+
+    The Daily Special: {{special_name}}
+    Price: ${{special_price}}
+    {{special_description}}
+
+    <br><br>
+
+    <p>Special Instructions for order</p>
+    <textarea name="special_instructions"></textarea>
+
+
+    <h1>Please enter your information</h1>
+<p>Name</p>
+    <input type="text" name="name">
+
+    <p>Phone number</p>
+    <input type="text" name="phone">
+
+    <p>Email</p>
+    <input type="email" name="email">
+
+  <br><br>
+
+    <input type="submit">
+
+</form>
+
+</div>
+
+{% endblock %}

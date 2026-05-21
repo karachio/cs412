@@ -1,0 +1,29 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div>
+
+<h1>Food Items</h1>
+
+<form action="{% url 'submit' %}" method="POST">
+    {% csrf_token %}
+
+
+    <input type="text" name="name">
+
+    <p>Food Items:</p>
+
+    <input type="checkbox" name="burgers" value="1"> Burgers<br>
+    <input type="checkbox" name="french_fries" value="1"> French Fries<br>
+    <input type="checkbox" name="french_toast" value="1"> French Toast<br>
+    <input type="checkbox" name="water" value="1"> Water<br>
+    <input type="checkbox" name="milkshake" value="1"> Milkshake<br>
+
+    <br>
+
+    <input type="submit">
+
+</form>
+
+</div>
+{% endblock %}
