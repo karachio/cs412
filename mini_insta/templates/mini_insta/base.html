@@ -1,0 +1,23 @@
+{% load static %}
+<html>
+    <head>
+        <title>Mini Insta</title>
+        <link rel="stylesheet" href="{% static 'styles-blog.css' %}">
+    </head>
+    <body>
+        <header>
+            <h1>Welcome to Mini Insta</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'show_all_profiles' %}">Show all profiles</a></li>
+                    <li><a href="{% url 'random' %}">Random</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+    {% block content %}
+    {% endblock %}    
+  
+    </body>
+</html>
+ 

@@ -24,6 +24,7 @@ urlpatterns = [
     path("formdata/", include("formdata.urls")),
     path("restaurant/", include("restaurant.urls")),
     path('blog/', include('blog.urls')), # include the URLs from our blog project's urls.py file
+    path('mini_insta/', include('mini_insta.urls')),
 ]
 
 from django.conf.urls.static import static
