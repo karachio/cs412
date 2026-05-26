@@ -1,3 +1,8 @@
+# File: views.py
+# Author: Karachi Onwuanibe (karachio@bu.edu), 5/26/2026
+# Description: the views python files that contains the profilelistview and 
+# profiledetailview, both needed to retrieve the profiles objects
+
 from django.shortcuts import render
 
 # Create your views here.
