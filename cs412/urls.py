@@ -19,10 +19,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path("hw/", include("hw.urls")),
+    path("hw/", include("hw.urls")),
     path('', include('quotes.urls')),
     path("formdata/", include("formdata.urls")),
     path("restaurant/", include("restaurant.urls")),
+    path('blog/', include('blog.urls')), # include the URLs from our blog project's urls.py file
 ]
 
 from django.conf.urls.static import static
