@@ -12,7 +12,7 @@
  
  
         {% if a.profile_image_url %}
-        <a href=" url 'profile' a.pk ">
+        <a href="{% url 'show_profile' a.pk %}">
         <img src="{{a.profile_image_url}}" alt="{{a.profile_image_url}}">
         </a>
         {% endif %}

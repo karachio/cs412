@@ -16,8 +16,9 @@ class ProfileListView(ListView):
     context_object_name = 'profiles' # how to find the data in the template file
  
  
-#class ArticleView(DetailView):
- #   '''Show the details for one article.'''
- #  model = Article
- #   template_name = 'blog/article.html' ## reusing same template!!
-  #  context_object_name = 'article'
+class ProfileDetailView(DetailView):
+   '''Show the details for one profile on mini insta.'''
+   
+   model = Profile
+   template_name = 'mini_insta/show_profile.html' ## reusing same template!!
+   context_object_name = 'profiles'
