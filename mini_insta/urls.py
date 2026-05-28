@@ -3,12 +3,13 @@
 # Description: The url mapping to specific views needed for the mini insta
 
 from django.urls import path
-from .views import ProfileListView, ProfileDetailView
+from .views import ProfileListView, ProfileDetailView, PostDetailView
  
  
 urlpatterns = [
     path('', ProfileListView.as_view(), name="show_all_profiles"), #default
     path('show_all', ProfileListView.as_view(), name="show_all_profiles"), # modified
     path('profile/<int:pk>', ProfileDetailView.as_view(), name='show_profile'),# new
+    path('post/<int:pk>', PostDetailView.as_view(), name='show_post'),
 ]
  

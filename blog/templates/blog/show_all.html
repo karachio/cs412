@@ -11,9 +11,9 @@
     <article>
  
  
-        {% if a.image_url %}
+        {% if article.image_file.url %}
         <a href="{% url 'article' a.pk %}">
-        <img src="{{a.image_url}}" alt="{{a.image_url}}">
+        <img src="{{article.image_file.url}}" alt="{{article.image_file.url}}">
         </a>
         {% endif %}
         

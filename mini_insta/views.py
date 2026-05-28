@@ -4,6 +4,7 @@
 # profiledetailview, both needed to retrieve the profiles objects
 
 from django.shortcuts import render
+from .models import Post, Photo, Profile
 
 # Create your views here.
 
@@ -27,3 +28,13 @@ class ProfileDetailView(DetailView):
    model = Profile
    template_name = 'mini_insta/show_profile.html' ## reusing same template!!
    context_object_name = 'profiles'
+   
+   
+   
+
+class PostDetailView(DetailView):
+    '''Display one post on the profile.'''
+
+    model = Post
+    template_name = "mini_insta/show_post.html"
+    context_object_name = "post"

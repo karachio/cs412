@@ -24,6 +24,26 @@ bio, the date created, the username and then to display name.-->
         <p>
         </p>
         </div>
+
+        {% for post in profiles.get_all_posts %}
+
+    <div class="post">
+
+        <a href="{% url 'show_post' post.pk %}">
+
+            {% if post.get_all_photos %}
+                <img src="{{post.get_all_photos.0.image_file.url}}">
+            {% else %}
+                <img src="https://cs-people.bu.edu/karachio/images/No_Image_Available.jpg">
+            {% endif %}
+
+            <p>{{post.caption}}</p>
+
+        </a>
+
+    </div>
+
+{% endfor %}
     </article>
  
  
