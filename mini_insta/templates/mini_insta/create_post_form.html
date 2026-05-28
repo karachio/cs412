@@ -19,7 +19,8 @@ mini_insta/create_article_form.html
     {{form.as_table}}
     </table>
  
- 
+    <input type="file" name="image" multiple>
+    <br><br>
     <input type="submit" name="submit" value="Submit">
 
     <a href="{% url 'show_profile' profiles.pk %}">Cancel</a>

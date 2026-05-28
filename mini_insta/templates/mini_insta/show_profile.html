@@ -32,7 +32,7 @@ bio, the date created, the username and then to display name.-->
         <a href="{% url 'show_post' post.pk %}">
 
             {% if post.get_all_photos %}
-                <img src="{{post.get_all_photos.0.image_file.url}}">
+                <img src="{{post.get_all_photos.0.get_image_url}}">
             {% else %}
                 <img src="https://cs-people.bu.edu/karachio/images/No_Image_Available.jpg">
             {% endif %}

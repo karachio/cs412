@@ -1,3 +1,8 @@
+<!--
+# File: show_post.html
+# Author: Karachi Onwuanibe (karachio@bu.edu), 5/28/2026
+# Description: The html file that helps in showing one post in our mini insta -->
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
@@ -9,7 +14,7 @@
 
 {% for photo in post.get_all_photos %}
 
-    <img src="{{photo.image_url}}">
+    <img src="{{photo.get_image_url}}">
 
 {% endfor %}
 

@@ -4,6 +4,7 @@
 
 from django.db import models
 
+
 # Create your models here.
 
  
@@ -48,8 +49,7 @@ class Post(models.Model):
         '''Return all of the photos of a post.'''
  
  
-        photos = Photo.objects.filter(post=self)
-        return photos
+        return self.photo_set.all()
     
     
 class Photo(models.Model):
@@ -59,8 +59,20 @@ class Photo(models.Model):
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     image_url = models.URLField(blank=True)
     timestamp = models.DateTimeField(auto_now=True)
+    image_file = models.ImageField(blank=True)
 
     def __str__(self):
         '''Return a string representation of this Photo object.'''
-        return f'Post by {self.post} on {self.timestamp}'
+        if self.image_url:
+            return f'Image at {self.image_url} on {self.timestamp}'
+        elif self.image_file:
+            return f'Image at {self.image_file} on {self.timestamp}'
+    
+    def get_image_url(self):
+        '''Return all of the images '''
+ 
+        if self.image_url:
+            return self.image_url
+        elif self.image_file:
+            return self.image_file.url
  

@@ -27,7 +27,7 @@ class ProfileDetailView(DetailView):
    '''Show the details for one profile on mini insta.'''
    
    model = Profile
-   template_name = 'mini_insta/show_profile.html' ## reusing same template!!
+   template_name = 'mini_insta/show_profile.html' 
    context_object_name = 'profiles'
    
    
@@ -85,14 +85,18 @@ class CreatePostView(CreateView):
         # retrieve the PK from the URL pattern
         pk = self.kwargs['pk']
         profile = Profile.objects.get(pk=pk)
-        # attach this article to the comment
+        # attach this post to the comment
         form.instance.profile = profile # set the FK
         
         response = super().form_valid(form)
  
-        image_url = self.request.POST.get('image_url')
-        if image_url:
-            Photo.objects.create(post=self.object, image_url=image_url)
+        #image_url = self.request.POST.get('image_url')
+       # if image_url:
+       #     Photo.objects.create(post=self.object, image_url=image_url)
+       
+        images = self.request.FILES.getlist('image')
+        for img in images:
+            Photo.objects.create(post=self.object, image_file=img)
         
         # delegate the work to the superclass method form_valid:
         return response
