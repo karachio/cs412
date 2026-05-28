@@ -5,11 +5,12 @@
 
 from django.shortcuts import render
 from .models import Post, Photo, Profile
+from django.urls import reverse
 
 # Create your views here.
 
 from .models import Profile
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 import random
  
  
@@ -38,3 +39,64 @@ class PostDetailView(DetailView):
     model = Post
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
+    
+    
+class CreatePostView(CreateView):
+    '''a view to create a post.'''
+
+    model = Post
+    fields = ['caption']
+    template_name = "mini_insta/create_post_form.html"
+    context_object_name = "post"
+    
+    
+    def get_context_data(self):
+        '''Return the dictionary of context variables for use in the template.'''
+ 
+ 
+        # calling the superclass method
+        context = super().get_context_data()
+ 
+ 
+        # find/add the post to the context data
+        # retrieve the PK from the URL pattern
+        pk = self.kwargs['pk']
+        posts = Profile.objects.get(pk=pk)
+ 
+ 
+        # add this post into the context dictionary:
+        context['posts'] = posts
+        context['profiles'] = Profile.objects.get(pk=pk)
+        return context
+    
+    
+    
+    def form_valid(self, form):
+        '''This method handles the form submission and saves the 
+        new object to the Django database.
+        We need to add the foreign key (of the Photo) to the Post
+        object before saving it to the database.
+        '''
+ 
+ 
+		# instrument our code to display form fields: 
+        print(f"CreatePostView.form_valid: form.cleaned_data={form.cleaned_data}")
+        
+        # retrieve the PK from the URL pattern
+        pk = self.kwargs['pk']
+        profile = Profile.objects.get(pk=pk)
+        # attach this article to the comment
+        form.instance.profile = profile # set the FK
+        
+        response = super().form_valid(form)
+ 
+        image_url = self.request.POST.get('image_url')
+        if image_url:
+            Photo.objects.create(post=self.object, image_url=image_url)
+        
+        # delegate the work to the superclass method form_valid:
+        return response
+    
+    
+    def get_success_url(self):
+        return reverse('show_post', kwargs={'pk': self.object.pk})
