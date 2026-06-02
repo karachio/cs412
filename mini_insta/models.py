@@ -54,6 +54,9 @@ class Post(models.Model):
  
         return self.photo_set.all()
     
+    def get_absolute_url(self):
+        return reverse('show_post', kwargs={'pk': self.pk})
+    
     
 class Photo(models.Model):
     '''Encapsulate the idea of a post on a photo on mini insta.'''

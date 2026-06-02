@@ -9,13 +9,27 @@
 
 <h1>Posts</h1>
 
-<p>{{post.caption}}</p>
-<p>{{post.timestamp}}</p>
 
-{% for photo in post.get_all_photos %}
+<div class="post-details">
+    <p>{{ post.caption }}</p>
+    <p>{{ post.timestamp }}</p>
+</div>
 
-    <img src="{{photo.get_image_url}}">
 
-{% endfor %}
+<div class="post-actions">
+    <a href="{% url 'update_post' post.pk %}">Update Post</a>
+    <br><br>
+    <a href="{% url 'delete_post' post.pk %}">Delete Post</a>
+</div>
+
+
+
+
+<div class="post-photos">
+    {% for photo in post.get_all_photos %}
+        <img src="{{ photo.get_image_url }}">
+        <br>
+    {% endfor %}
+</div>
 
 {% endblock %}

@@ -1,0 +1,26 @@
+<!--
+# File: update_post_form.html
+# Author: Karachi Onwuanibe (karachio@bu.edu), 6/02/2026
+# Description: The html file that helps in updating a post in our mini insta -->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+<h2>Update Post</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <input type="submit" value="Update">
+</form>
+
+<!-- Cancel button -->
+<form action="{% url 'show_post' post.pk %}" method="GET">
+    <input type="submit" value="Cancel">
+</form>
+
+{% endblock %}

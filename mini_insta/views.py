@@ -10,7 +10,7 @@ from django.urls import reverse
 # Create your views here.
 
 from .models import Profile
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 import random
 from .forms import UpdateProfileForm
  
@@ -122,3 +122,55 @@ class UpdateProfileView(UpdateView):
  
  
         return super().form_valid(form)
+    
+    
+
+
+class DeletePostView(DeleteView):
+    '''A view to delete a comment and remove it from the database.'''
+ 
+ 
+    template_name = "mini_insta/delete_post_form.html"
+    model = Post
+    context_object_name = 'post'
+    
+    def get_success_url(self):
+        '''Return a the URL to which we should be directed after the delete.'''
+ 
+ 
+        # get the pk for this comment
+        #pk = self.kwargs.get('pk')
+        post = self.object
+        
+        # find the article to which this Comment is related by FK
+        profile = post.profile
+        
+        # reverse to show the article page
+        return reverse('show_profile', kwargs={'pk':profile.pk})
+    
+    
+    def get_context_data(self, **kwargs):
+        '''Return the dictionary of context variables for use in the template.'''
+ 
+ 
+        # calling the superclass method
+        context = super().get_context_data(**kwargs)
+ 
+ 
+        # find/add the post to the context data
+        # retrieve the PK from the URL pattern
+        #pk = self.kwargs['pk']
+        posts = self.object
+        profile = self.object
+ 
+ 
+        # add this post into the context dictionary:
+        context['posts'] = posts
+        context['profile'] = profile
+        return context
+    
+    
+class UpdatePostView(UpdateView):
+    model = Post
+    fields = ['caption']
+    template_name = "mini_insta/update_post_form.html"
