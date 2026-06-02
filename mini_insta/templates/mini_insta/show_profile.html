@@ -22,6 +22,9 @@ bio, the date created, the username and then to display name.-->
         <br></br>
         <strong>Bio: {{profiles.bio_text}}</strong>
         <p>
+            <h3>
+                <a href="{% url 'update_profile' profiles.pk %}">Update Profile</a>
+            </h3>
         </p>
         </div>
 

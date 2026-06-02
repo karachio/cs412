@@ -10,8 +10,9 @@ from django.urls import reverse
 # Create your views here.
 
 from .models import Profile
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 import random
+from .forms import UpdateProfileForm
  
  
 class ProfileListView(ListView):
@@ -104,3 +105,20 @@ class CreatePostView(CreateView):
     
     def get_success_url(self):
         return reverse('show_post', kwargs={'pk': self.object.pk})
+    
+    
+class UpdateProfileView(UpdateView):
+    '''A view to update an Article and save it to the database.'''
+ 
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_insta/update_profile_form.html"
+    
+    def form_valid(self, form):
+        '''
+        Handle the form submission to update a Profile object.
+        '''
+        print(f'UpdateProfileView: form.cleaned_data={form.cleaned_data}')
+ 
+ 
+        return super().form_valid(form)

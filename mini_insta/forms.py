@@ -12,6 +12,14 @@ class CreatePostForm(forms.ModelForm):
     class Meta:
         '''Associate this form with the Post model; select fields to add.'''
         model = Post
-        fields = ['profile', 'caption', 'timestamp']
+        fields = ['profile', 'caption']#, 'timestamp']
         
+        
+class UpdateProfileForm(forms.ModelForm):
+    '''A form to update a profile to the database.'''
+ 
+    class Meta:
+        '''associate this form with the Article model.'''
+        model = Profile
+        fields = ['display_name', 'bio_text', 'profile_image_url' ]  # which fields from model should we use
     
