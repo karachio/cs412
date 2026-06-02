@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
  
  
 class Article(models.Model):
@@ -23,6 +24,9 @@ class Article(models.Model):
  
         comments = Comment.objects.filter(article=self)
         return comments
+    
+    def get_absolute_url(self):
+        return reverse('article', kwargs={'pk': self.pk})
  
  
 class Comment(models.Model):
@@ -37,3 +41,5 @@ class Comment(models.Model):
     def __str__(self):
         '''Return a string representation of this Comment object.'''
         return f'Comment by {self.author} on {self.article}'
+
+
