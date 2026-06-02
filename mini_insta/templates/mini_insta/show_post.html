@@ -11,10 +11,26 @@
 
 
 <div class="post-details">
+    <p><strong>Likes: {{post.get_likes.count}}</strong></p>
+
     <p>{{ post.caption }}</p>
     <p>{{ post.timestamp }}</p>
 </div>
 
+
+<div class="post-comments">
+    <h3>Comments</h3>
+
+    {% for comment in post.get_all_comments %}
+        <div class="comment">
+            <strong>{{ comment.profile }}</strong>
+            <p>{{ comment.text }}</p>
+            <small>{{ comment.timestamp }}</small>
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+</div>
 
 <div class="post-actions">
     <a href="{% url 'update_post' post.pk %}">Update Post</a>

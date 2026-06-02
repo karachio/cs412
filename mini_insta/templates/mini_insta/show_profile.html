@@ -26,6 +26,17 @@ bio, the date created, the username and then to display name.-->
                 <a href="{% url 'update_profile' profiles.pk %}">Update Profile</a>
             </h3>
         </p>
+
+        <p>
+                <a href="{% url 'show_followers' profiles.pk %}">
+                    Followers: {{ profiles.get_num_followers }}
+                </a>
+                <br>
+                <a href="{% url 'show_following' profiles.pk %}">
+                    Following: {{ profiles.get_num_following }}
+                </a>
+            </p>
+            
         </div>
 
         {% for post in profiles.get_all_posts %}

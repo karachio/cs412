@@ -1,0 +1,19 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+<h1>{{profile.username}}'s Followers</h1>
+
+<p>Total Followers: {{profile.get_num_followers}}</p>
+
+<ul>
+    {% for follower in profile.get_followers %}
+        <li>
+            {{follower.username}} ({{follower.display_name}})
+        </li>
+    {% empty %}
+        <li>No followers yet.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

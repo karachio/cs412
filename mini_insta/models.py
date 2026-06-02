@@ -5,6 +5,7 @@
 from django.db import models
 from django.urls import reverse
 
+
 # Create your models here.
 
  
@@ -35,7 +36,54 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse('show_profile', kwargs={'pk': self.pk})
     
+    def get_num_followers(self):
+        '''Return the number of followers for this Profile.'''
+
+        return Follow.objects.filter(profile=self).count()
     
+    def get_num_following(self):
+        '''Return the number of Profiles this Profile is following.'''
+
+        return Follow.objects.filter(follower_profile=self).count()
+    
+    def get_following(self):
+        '''Return a list of Profiles this Profile is following.'''
+
+        follows = Follow.objects.filter(follower_profile=self)
+
+        following = []
+        for follow in follows:
+            following.append(follow.profile)
+
+        return following
+    
+    def get_followers(self):
+        '''Return a list of Profiles who follow this Profile.'''
+
+        follows = Follow.objects.filter(profile=self)
+
+        followers = []
+        for follow in follows:
+            followers.append(follow.follower_profile)
+
+        return followers
+    
+    
+    
+class Like(models.Model):
+    '''Encapsulates the idea of a Profile liking a Post.'''
+
+    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="likes")
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="likes")
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        '''Return a string representation of this Like object.'''
+        return f'{self.profile} liked {self.post} at {self.timestamp}'
+    
+    
+    
+
 class Post(models.Model):
     '''Encapsulate the idea of a post on an Profile on mini insta.'''
 
@@ -56,6 +104,19 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return reverse('show_post', kwargs={'pk': self.pk})
+    
+    def get_likes(self):
+        return Like.objects.filter(post=self)
+    
+    def get_all_comments(self):
+        '''Return all comments on this Post.'''
+
+        return Comment.objects.filter(post=self)
+    
+    def get_likes(self):
+        '''Return all likes on this Post.'''
+
+        return Like.objects.filter(post=self)
     
     
 class Photo(models.Model):
@@ -82,3 +143,47 @@ class Photo(models.Model):
         elif self.image_file:
             return self.image_file.url
  
+
+
+
+class Follow(models.Model):
+    '''Encapsulate the idea of a Profile of a user on instagram.'''
+ 
+ 
+    # data attributes of Follow needed for the user profile on mini_insta:
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="profile")
+    follower_profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="follower_profile")
+    timestamp = models.DateTimeField(auto_now=True)
+    
+    
+    def __str__(self):
+        '''Return a string representation of this Follow object.'''
+        return f'{self.follower_profile} follows {self.profile} on {self.timestamp}'
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+class Comment(models.Model):
+    '''Encapsulate the idea of a Profile of a user on instagram.'''
+ 
+ 
+    # data attributes of Follow needed for the user profile on mini_insta:
+    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="comments")
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="comments")
+    timestamp = models.DateTimeField(auto_now=True)
+    text = models.TextField(blank=False)
+    
+    def __str__(self):
+        '''Return a string representation of this Comment object.'''
+        return f'Comment by {self.profile} on {self.post}: {self.text}'
+    
+    
+    
+    

@@ -1,0 +1,19 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+<h1>{{profile.username}} is Following</h1>
+
+<p>Total Following: {{profile.get_num_following}}</p>
+
+<ul>
+    {% for user in profile.get_following %}
+        <li>
+            {{user.username}} ({{user.display_name}})
+        </li>
+    {% empty %}
+        <li>Not following anyone.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

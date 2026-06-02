@@ -174,3 +174,32 @@ class UpdatePostView(UpdateView):
     model = Post
     fields = ['caption']
     template_name = "mini_insta/update_post_form.html"
+    
+    
+class ShowFollowersDetailView(DetailView):
+
+    model = Profile
+    template_name = "mini_insta/show_followers.html"
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        profile = self.object
+        context['followers'] = profile.get_followers()
+
+        return context
+    
+class ShowFollowingDetailView(DetailView):
+    
+    model = Profile
+    template_name = "mini_insta/show_following.html"
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        profile = self.object
+        context['following'] = profile.get_following()
+
+        return context
