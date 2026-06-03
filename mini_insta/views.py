@@ -21,8 +21,7 @@ class ProfileListView(ListView):
  
     model = Profile # retrieve objects of type Profile from the database
     template_name = 'mini_insta/show_all_profiles.html'
-    context_object_name = 'profiles' # how to find the data in the template file
- 
+    context_object_name = 'profiles' 
  
 class ProfileDetailView(DetailView):
    '''Show the details for one profile on mini insta.'''
