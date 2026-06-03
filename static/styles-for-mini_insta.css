@@ -401,3 +401,57 @@ input[type="submit"]:hover {
     color: darkred;
     transform: translateY(-1px);
 }
+
+
+
+.feed-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.feed-author img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+}
+
+.feed-author p {
+    margin: 0;
+}
+
+
+.feed-post,
+.result-card {
+    background: #fffaf5;
+    border: 1px solid #c9d6df;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+
+.feed-post img {
+    width: 100%;
+    max-width: 250px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 3px solid #fff;
+}
+
+
+.feed-post .results-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+.feed-post p {
+    margin: 5px 0;
+}

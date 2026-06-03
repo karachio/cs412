@@ -11,44 +11,53 @@ mini_insta/show_feed.html
 
 {% block content %}
 
-<h1>{{ profile.display_name }}'s Feed</h1>
+<main class="search-results-page">
 
-<a href="{% url 'show_profile' profile.pk %}">
-    Back to Profile
-</a>
+    <h1>{{ profile.display_name }}'s Feed</h1>
 
-{% for post in profile.get_post_feed %}
+    <a class="back-link" href="{% url 'show_profile' profile.pk %}">
+        Back to Profile
+    </a>
 
-    <div class="feed-post">
+    <div class="results-section">
 
-        <div class="post-author">
+        {% for post in profile.get_post_feed %}
 
-            {% if post.profile.profile_image_url %}
-                <img src="{{post.profile.profile_image_url}}" width="100">
-            {% endif %}
+            <div class="result-card">
 
-            <h3>{{post.profile.display_name}}</h3>
-            <p>@{{post.profile.username}}</p>
+                
+                <div class="feed-author">
+                    {% if post.profile.profile_image_url %}
+                        <img src="{{post.profile.profile_image_url}}" width="60">
+                    {% endif %}
 
-        </div>
+                    <p><strong>{{ post.profile.display_name }}</strong></p>
+                    <p>@{{post.profile.username}}</p>
+                </div>
 
-        <div class="post-content">
-            <p>{{post.caption}}</p>
-            <p>{{post.timestamp}}</p>
-        </div>
+                
+                <div class="post-content">
+                    <p>{{post.caption}}</p>
+                    <p><small>{{post.timestamp}}</small></p>
+                </div>
 
-        {% for photo in post.get_all_photos %}
-            <img src="{{photo.get_image_url}}" width="300">
+              
+                <div class="results-grid">
+                    {% for photo in post.get_all_photos %}
+                        <img src="{{photo.get_image_url}}">
+                    {% endfor %}
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p>No posts in your feed yet.</p>
+
         {% endfor %}
 
     </div>
 
-
-
-{% empty %}
-
-    <p>No posts in your feed yet.</p>
-
-{% endfor %}
+</main>
 
 {% endblock %}
