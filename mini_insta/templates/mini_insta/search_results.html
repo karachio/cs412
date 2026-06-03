@@ -7,63 +7,80 @@ mini_insta/search_results.html
     display the HTML search results.
 -->
 
-
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
 
-<h1>Search Results for "{{ query }}"</h1>
+<div class="search-results-page">
 
-<a href="{% url 'show_profile' profile.pk %}">
-    Back to Profile
-</a>
+    <h1>Search Results for "{{ query }}"</h1>
 
-<hr>
+    <a class="back-link" href="{% url 'show_profile' profile.pk %}">
+        ← Back to Profile
+    </a>
 
+    <hr>
 
-<h2>Matching Profiles</h2>
+    <div class="results-section">
 
-{% for p in profiles %}
+        <h2>Matching Profiles</h2>
 
-    <div class="profile-result">
+        <div class="results-grid">
 
-        {% if p.profile_image_url %}
-            <img src="{{ p.profile_image_url }}" width="80">
-        {% endif %}
+            {% for p in profiles %}
 
-        <p>
-            <a href="{% url 'show_profile' p.pk %}">
-                {{ p.username }} ({{ p.display_name }})
-            </a>
-        </p>
+                <div class="result-card profile-result">
 
-    </div>
+                    {% if p.profile_image_url %}
+                        <img src="{{ p.profile_image_url }}" width="80">
+                    {% endif %}
 
-{% empty %}
-    <p>No matching profiles found.</p>
-{% endfor %}
+                    <p>
+                        <a href="{% url 'show_profile' p.pk %}">
+                            {{ p.username }} ({{ p.display_name }})
+                        </a>
+                    </p>
 
-<hr>
+                </div>
 
+            {% empty %}
+                <p>No matching profiles found.</p>
+            {% endfor %}
 
-<h2>Matching Posts</h2>
-
-{% for post in posts %}
-
-    <div class="post-result">
-
-        <p><strong>{{ post.profile.username }}</strong></p>
-        <p>{{ post.caption }}</p>
-        <p><small>{{ post.timestamp }}</small></p>
-
-        {% for photo in post.get_all_photos %}
-            <img src="{{ photo.get_image_url }}" width="150">
-        {% endfor %}
+        </div>
 
     </div>
 
-{% empty %}
-    <p>No matching posts found.</p>
-{% endfor %}
+    <hr>
+
+    <div class="results-section">
+
+        <h2>Matching Posts</h2>
+
+        <div class="results-grid">
+
+            {% for post in posts %}
+
+                <div class="result-card post-result">
+
+                    <p><strong>{{post.profile.username}}</strong></p>
+                    <p>{{post.caption}}</p>
+                    <p><small>{{post.timestamp}}</small></p>
+
+                    {% for photo in post.get_all_photos %}
+                        <img src="{{photo.get_image_url}}" width="150">
+                    {% endfor %}
+
+                </div>
+
+            {% empty %}
+                <p>No matching posts found.</p>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}

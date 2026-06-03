@@ -4,48 +4,67 @@
 # Description: The html file that helps in showing one post in our mini insta -->
 
 {% extends 'mini_insta/base.html' %}
-
 {% block content %}
 
-<h1>Posts</h1>
+<main class="search-results-page">
 
+    <h1>Post</h1>
 
-<div class="post-details">
-    <p><strong>Likes: {{post.get_likes.count}}</strong></p>
+   
+    <div class="result-card">
 
-    <p>{{ post.caption }}</p>
-    <p>{{ post.timestamp }}</p>
-</div>
+        <p><strong>Likes: {{post.get_likes.count}}</strong></p>
 
+        <p>{{ post.caption }}</p>
+        <p><small>{{post.timestamp}}</small></p>
 
-<div class="post-comments">
-    <h3>Comments</h3>
+    </div>
 
-    {% for comment in post.get_all_comments %}
-        <div class="comment">
-            <strong>{{ comment.profile }}</strong>
-            <p>{{ comment.text }}</p>
-            <small>{{ comment.timestamp }}</small>
+    
+    <div class="results-section">
+        <h3>Photos</h3>
+
+        <div class="results-grid">
+            {% for photo in post.get_all_photos %}
+                <img src="{{ photo.get_image_url }}">
+            {% endfor %}
         </div>
-    {% empty %}
-        <p>No comments yet.</p>
-    {% endfor %}
+    </div>
+
+  
+    <div class="results-section">
+
+        <h3>Comments</h3>
+
+        {% for comment in post.get_all_comments %}
+            <div class="result-card">
+                <strong>{{ comment.profile }}</strong>
+                <p>{{ comment.text }}</p>
+                <small>{{ comment.timestamp }}</small>
+            </div>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+
+    </div>
+
+  
+    <div class="form-actions">
+
+    <a href="{% url 'show_profile' post.profile.pk %}" class="btn">
+        Back to Profile
+    </a>
+
+    <a href="{% url 'update_post' post.pk %}" class="btn">
+        Update Post
+    </a>
+
+    <a href="{% url 'delete_post' post.pk %}" class="btn cancel-link">
+        Delete Post
+    </a>
+
 </div>
 
-<div class="post-actions">
-    <a href="{% url 'update_post' post.pk %}">Update Post</a>
-    <br><br>
-    <a href="{% url 'delete_post' post.pk %}">Delete Post</a>
-</div>
-
-
-
-
-<div class="post-photos">
-    {% for photo in post.get_all_photos %}
-        <img src="{{ photo.get_image_url }}">
-        <br>
-    {% endfor %}
-</div>
+</main>
 
 {% endblock %}

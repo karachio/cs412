@@ -11,19 +11,27 @@ mini_insta/search.html
 
 {% block content %}
 
-<h1>Search</h1>
+<div class="search-page">
 
-<form method="GET" action="{% url 'search' profile.pk %}">
+    <h1>Search</h1>
 
-    <label for="query">Search:</label>
-    
-    <textarea name="q" id="query" rows="2" cols="40"
-        placeholder="Search profiles or posts"></textarea>
+    <div class="search-container">
 
-    <br><br>
+        <form method="GET" action="{% url 'search' profile.pk %}">
 
-    <button type="submit">Search</button>
+            <label for="query">Search:</label>
+            
+            <textarea name="q" id="query" rows="2" cols="40"
+                placeholder="Search profiles or posts"></textarea>
 
-</form>
+            <br><br>
+
+            <button type="submit">Search</button>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}
