@@ -211,3 +211,51 @@ class ShowFeedView(DetailView):
     model = Profile
     template_name = "mini_insta/show_feed.html"
     context_object_name = "profile"
+    
+    
+class SearchView(ListView):
+    model = Profile
+    template_name = "mini_insta/search_results.html"
+    context_object_name = "profiles"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        query = self.request.GET.get("q", "")
+
+        # profile doing the search
+        context["profile"] = Profile.objects.get(pk=self.kwargs["pk"])
+
+        # search query
+        context["query"] = query
+
+        # POSTS (from get_queryset as required)
+        context["posts"] = self.get_queryset()
+
+        # PROFILES matching query
+        profiles_by_username = Profile.objects.filter(username__icontains=query)
+        profiles_by_display = Profile.objects.filter(display_name__icontains=query)
+        profiles_by_bio = Profile.objects.filter(bio_text__icontains=query)
+
+        context["profiles"] = (profiles_by_username | profiles_by_display | profiles_by_bio).distinct()
+
+        return context
+    
+    def dispatch(self, request, *args, **kwargs):
+        query = request.GET.get("q")
+
+
+        if not query:
+            profile = Profile.objects.get(pk=kwargs["pk"])
+            return render(request, "mini_insta/search.html", {
+                "profile": profile
+            })
+
+
+        return super().dispatch(request, *args, **kwargs)
+    
+    
+    def get_queryset(self):
+        query = self.request.GET.get("q", "")
+
+        return Post.objects.filter(caption__icontains=query)

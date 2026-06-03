@@ -1,0 +1,59 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+<h1>Search Results for "{{ query }}"</h1>
+
+<a href="{% url 'show_profile' profile.pk %}">
+    Back to Profile
+</a>
+
+<hr>
+
+
+<h2>Matching Profiles</h2>
+
+{% for p in profiles %}
+
+    <div class="profile-result">
+
+        {% if p.profile_image_url %}
+            <img src="{{ p.profile_image_url }}" width="80">
+        {% endif %}
+
+        <p>
+            <a href="{% url 'show_profile' p.pk %}">
+                {{ p.username }} ({{ p.display_name }})
+            </a>
+        </p>
+
+    </div>
+
+{% empty %}
+    <p>No matching profiles found.</p>
+{% endfor %}
+
+<hr>
+
+
+<h2>Matching Posts</h2>
+
+{% for post in posts %}
+
+    <div class="post-result">
+
+        <p><strong>{{ post.profile.username }}</strong></p>
+        <p>{{ post.caption }}</p>
+        <p><small>{{ post.timestamp }}</small></p>
+
+        {% for photo in post.get_all_photos %}
+            <img src="{{ photo.get_image_url }}" width="150">
+        {% endfor %}
+
+    </div>
+
+{% empty %}
+    <p>No matching posts found.</p>
+{% endfor %}
+
+{% endblock %}
