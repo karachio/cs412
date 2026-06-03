@@ -68,6 +68,13 @@ class Profile(models.Model):
 
         return followers
     
+    def get_post_feed(self):
+        '''Return all Posts from Profiles that this Profile follows.'''
+
+        following = self.get_following()
+
+        return Post.objects.filter(profile__in=following)
+    
     
     
 class Like(models.Model):

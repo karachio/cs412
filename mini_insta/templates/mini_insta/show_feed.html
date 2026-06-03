@@ -1,0 +1,45 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+<h1>{{ profile.display_name }}'s Feed</h1>
+
+<a href="{% url 'show_profile' profile.pk %}">
+    Back to Profile
+</a>
+
+{% for post in profile.get_post_feed %}
+
+    <div class="feed-post">
+
+        <div class="post-author">
+
+            {% if post.profile.profile_image_url %}
+                <img src="{{post.profile.profile_image_url}}" width="100">
+            {% endif %}
+
+            <h3>{{post.profile.display_name}}</h3>
+            <p>@{{post.profile.username}}</p>
+
+        </div>
+
+        <div class="post-content">
+            <p>{{post.caption}}</p>
+            <p>{{post.timestamp}}</p>
+        </div>
+
+        {% for photo in post.get_all_photos %}
+            <img src="{{photo.get_image_url}}" width="300">
+        {% endfor %}
+
+    </div>
+
+
+
+{% empty %}
+
+    <p>No posts in your feed yet.</p>
+
+{% endfor %}
+
+{% endblock %}

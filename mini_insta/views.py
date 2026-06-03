@@ -203,3 +203,11 @@ class ShowFollowingDetailView(DetailView):
         context['following'] = profile.get_following()
 
         return context
+    
+    
+class ShowFeedView(DetailView):
+    '''Display the feed for a Profile.'''
+
+    model = Profile
+    template_name = "mini_insta/show_feed.html"
+    context_object_name = "profile"

@@ -24,16 +24,37 @@ its content for display.-->
     {% endblock %}    
 
     <footer>
-            <a href="{% url 'show_all_profiles' %}">
-                Back to All Profiles
-            </a>
-<br><br>
-            {% if profiles and profiles.pk%}
-                <a href="{% url 'create_post' profiles.pk %}">
-                    Create Post
-                </a>
-            {% endif %}
-    </footer>
+
+    <a href="{% url 'show_all_profiles' %}">
+        Back to All Profiles
+    </a>
+
+    <br><br>
+
+    {% if profiles and profiles.pk %}
+
+        <!-- HOME = FEED (new requirement) -->
+        <a href="{% url 'show_feed' profiles.pk %}">
+            Home
+        </a>
+
+        <br><br>
+
+        <!-- Profile link (new requirement) -->
+        <a href="{% url 'show_profile' profiles.pk %}">
+            Profile
+        </a>
+
+        <br><br>
+
+        <!-- Create post (existing working feature) -->
+        <a href="{% url 'create_post' profiles.pk %}">
+            Create Post
+        </a>
+
+    {% endif %}
+
+</footer>
   
     </body>
 </html>
