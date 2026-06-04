@@ -14,9 +14,11 @@ from django.contrib.auth import login # NEW
 # Create your views here.
 
 from .models import Profile
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 import random
 from .forms import UpdateProfileForm
+from django.shortcuts import get_object_or_404
+
  
  
 class ProfileListView(ListView):
@@ -122,6 +124,9 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
         '''return the URL required for login'''
         return reverse('login') 
     
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+    
     def form_valid(self, form):
         '''
         Handle the form submission to update a Profile object.
@@ -226,18 +231,35 @@ class ShowFollowingDetailView(DetailView):
         return context
     
     
-class ShowFeedView(LoginRequiredMixin, DetailView):
+class ShowFeedView(LoginRequiredMixin, TemplateView):
     '''Display the feed for a Profile.'''
 
     model = Profile
     template_name = "mini_insta/show_feed.html"
     context_object_name = "profile"
     
+    
+        
     def get_login_url(self):
         return reverse('login')
     
-    def get_object(self):
-        return Profile.objects.get(user=self.request.user)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #return Profile.objects.get(user=self.request.user)
+       # print("user:")
+        # print(self.request.user)
+        # print("/n")
+        # print("filter:")
+        # p = Profile.objects.filter(user=self.request.user).first()
+        # print(p)
+        # print(p.pk)
+        
+        # profile doing the search
+        context["profile"] = Profile.objects.get(user=self.request.user)
+        
+        return context
+        
+    
     
     
 class SearchView(LoginRequiredMixin, ListView):
@@ -254,7 +276,7 @@ class SearchView(LoginRequiredMixin, ListView):
         query = self.request.GET.get("q", "")
 
         # profile doing the search
-        context["profile"] = Profile.objects.get(pk=self.kwargs["pk"])
+        context["profile"] = Profile.objects.get(user=self.request.user)
 
         # search query
         context["query"] = query
@@ -272,14 +294,21 @@ class SearchView(LoginRequiredMixin, ListView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
+        
+        try:
+            self.profile = Profile.objects.get(user=request.user)
+        except:
+            return render(request, "mini_insta/search.html", {"error": "Profile not found"})
+        
         query = request.GET.get("q")
-
 
         if not query:
             profile = Profile.objects.get(user=self.request.user)
             return render(request, "mini_insta/search.html", {
                 "profile": profile
             })
+            
+            
 
 
         return super().dispatch(request, *args, **kwargs)
@@ -299,3 +328,8 @@ class ShowProfileView(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return Profile.objects.get(user=self.request.user)
+    
+    
+
+class LogoutConfirmationView(TemplateView):
+    template_name = "mini_insta/logged_out.html"

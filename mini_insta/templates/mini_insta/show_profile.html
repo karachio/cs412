@@ -22,10 +22,10 @@ bio, the date created, the username and then to display name.-->
         <strong>by {{profiles.display_name}} at {{profiles.join_date}}</strong>
         <br></br>
         <strong>Bio: {{profiles.bio_text}}</strong>
-        {% if request.user.is_authenticated and request.user == profiles.user %}
+        {% if request.user.is_authenticated %}
         <p>
             <h3>
-                <a href="{% url 'update_profile' profiles.pk %}">Update Profile</a>
+                <a href="{% url 'update_profile' %}">Update Profile</a>
             </h3>
         </p>
         {% endif %}
