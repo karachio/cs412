@@ -5,10 +5,11 @@
 bio, the date created, the username and then to display name.-->
 
 {% extends 'mini_insta/base.html' %}
-<h1>{{profiles.title}}</h1>
- 
+
+ <h1>{{profiles.title}}</h1>
  
 {% block content %}
+
 <main class="grid-container">
     
     <article class="featured">
@@ -21,11 +22,13 @@ bio, the date created, the username and then to display name.-->
         <strong>by {{profiles.display_name}} at {{profiles.join_date}}</strong>
         <br></br>
         <strong>Bio: {{profiles.bio_text}}</strong>
+        {% if request.user.is_authenticated and request.user == profiles.user %}
         <p>
             <h3>
                 <a href="{% url 'update_profile' profiles.pk %}">Update Profile</a>
             </h3>
         </p>
+        {% endif %}
 
         <p>
                 <a href="{% url 'show_followers' profiles.pk %}">

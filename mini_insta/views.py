@@ -6,6 +6,10 @@
 from django.shortcuts import render
 from .models import Post, Photo, Profile
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin ## NEW
+from django.contrib.auth.forms import UserCreationForm ## NEW
+from django.contrib.auth.models import User ## NEW
+from django.contrib.auth import login # NEW
 
 # Create your views here.
 
@@ -41,7 +45,7 @@ class PostDetailView(DetailView):
     context_object_name = "post"
     
     
-class CreatePostView(CreateView):
+class CreatePostView(LoginRequiredMixin, CreateView):
     '''a view to create a post.'''
 
     model = Post
@@ -49,6 +53,9 @@ class CreatePostView(CreateView):
     template_name = "mini_insta/create_post_form.html"
     context_object_name = "post"
     
+    def get_login_url(self) -> str:
+        '''return the URL required for login'''
+        return reverse('login') 
     
     def get_context_data(self):
         '''Return the dictionary of context variables for use in the template.'''
@@ -60,8 +67,7 @@ class CreatePostView(CreateView):
  
         # find/add the post to the context data
         # retrieve the PK from the URL pattern
-        pk = self.kwargs['pk']
-        posts = Profile.objects.get(pk=pk)
+        
  
  
         # add this post into the context dictionary:
@@ -83,10 +89,10 @@ class CreatePostView(CreateView):
         print(f"CreatePostView.form_valid: form.cleaned_data={form.cleaned_data}")
         
         # retrieve the PK from the URL pattern
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
+        profile = Profile.objects.get(user=self.request.user)
         # attach this post to the comment
         form.instance.profile = profile # set the FK
+        
         
         response = super().form_valid(form)
  
@@ -101,17 +107,20 @@ class CreatePostView(CreateView):
         # delegate the work to the superclass method form_valid:
         return response
     
-    
     def get_success_url(self):
         return reverse('show_post', kwargs={'pk': self.object.pk})
     
     
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
     '''A view to update an Article and save it to the database.'''
  
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_insta/update_profile_form.html"
+    
+    def get_login_url(self) -> str:
+        '''return the URL required for login'''
+        return reverse('login') 
     
     def form_valid(self, form):
         '''
@@ -119,19 +128,29 @@ class UpdateProfileView(UpdateView):
         '''
         print(f'UpdateProfileView: form.cleaned_data={form.cleaned_data}')
  
+        #user = self.request.user
+        #print(f"UpdateProfileView user={user} post.user={user}")
  
+        # attach user to form instance (Article object):
+        #form.instance.user = user
+        
+        
         return super().form_valid(form)
     
     
 
 
-class DeletePostView(DeleteView):
+class DeletePostView(LoginRequiredMixin, DeleteView):
     '''A view to delete a comment and remove it from the database.'''
  
  
     template_name = "mini_insta/delete_post_form.html"
     model = Post
     context_object_name = 'post'
+    
+    def get_login_url(self):
+        return reverse('login')
+    
     
     def get_success_url(self):
         '''Return a the URL to which we should be directed after the delete.'''
@@ -169,10 +188,13 @@ class DeletePostView(DeleteView):
         return context
     
     
-class UpdatePostView(UpdateView):
+class UpdatePostView(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['caption']
     template_name = "mini_insta/update_post_form.html"
+    
+    def get_login_url(self):
+        return reverse('login')
     
     
 class ShowFollowersDetailView(DetailView):
@@ -204,18 +226,27 @@ class ShowFollowingDetailView(DetailView):
         return context
     
     
-class ShowFeedView(DetailView):
+class ShowFeedView(LoginRequiredMixin, DetailView):
     '''Display the feed for a Profile.'''
 
     model = Profile
     template_name = "mini_insta/show_feed.html"
     context_object_name = "profile"
     
+    def get_login_url(self):
+        return reverse('login')
     
-class SearchView(ListView):
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+    
+    
+class SearchView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = "mini_insta/search_results.html"
     context_object_name = "profiles"
+
+    def get_login_url(self):
+        return reverse('login')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -245,7 +276,7 @@ class SearchView(ListView):
 
 
         if not query:
-            profile = Profile.objects.get(pk=kwargs["pk"])
+            profile = Profile.objects.get(user=self.request.user)
             return render(request, "mini_insta/search.html", {
                 "profile": profile
             })
@@ -258,3 +289,13 @@ class SearchView(ListView):
         query = self.request.GET.get("q", "")
 
         return Post.objects.filter(caption__icontains=query)
+    
+    
+
+class ShowProfileView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = "mini_insta/show_profile.html"
+    context_object_name = "profile"
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)

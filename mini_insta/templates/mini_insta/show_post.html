@@ -55,13 +55,17 @@
         Back to Profile
     </a>
 
-    <a href="{% url 'update_post' post.pk %}" class="btn">
-        Update Post
-    </a>
+    {% if request.user.is_authenticated and request.user == post.profile.user %}
 
-    <a href="{% url 'delete_post' post.pk %}" class="btn cancel-link">
-        Delete Post
-    </a>
+        <a href="{% url 'update_post' post.pk %}" class="btn">
+            Update Post
+        </a>
+
+        <a href="{% url 'delete_post' post.pk %}" class="btn cancel-link">
+            Delete Post
+        </a>
+
+    {% endif %}
 
 </div>
 
