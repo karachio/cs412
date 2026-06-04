@@ -34,7 +34,7 @@ class ProfileDetailView(DetailView):
    
    model = Profile
    template_name = 'mini_insta/show_profile.html' 
-   context_object_name = 'profiles'
+   context_object_name = 'profile'
    
    
    
@@ -53,28 +53,18 @@ class CreatePostView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['caption']
     template_name = "mini_insta/create_post_form.html"
-    context_object_name = "post"
+    #context_object_name = "post"
     
-    def get_login_url(self) -> str:
+    def get_login_url(self):
         '''return the URL required for login'''
         return reverse('login') 
     
-    def get_context_data(self):
-        '''Return the dictionary of context variables for use in the template.'''
- 
- 
-        # calling the superclass method
-        context = super().get_context_data()
- 
- 
-        # find/add the post to the context data
-        # retrieve the PK from the URL pattern
-        
- 
- 
-        # add this post into the context dictionary:
-        context['posts'] = posts
-        context['profiles'] = Profile.objects.get(pk=pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        profile = Profile.objects.get(user=self.request.user)
+        context['profile'] = profile
+
         return context
     
     

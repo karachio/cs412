@@ -6,22 +6,22 @@ bio, the date created, the username and then to display name.-->
 
 {% extends 'mini_insta/base.html' %}
 
- <h1>{{profiles.title}}</h1>
+
  
 {% block content %}
 
 <main class="grid-container">
     
     <article class="featured">
-        {% if profiles.profile_image_url %}
-		<img src="{{profiles.profile_image_url}}" alt="{{profiles.profile_image_url}}">
+        {% if profile.profile_image_url %}
+		<img src="{{profile.profile_image_url}}" alt="{{profile.profile_image_url}}">
 		{% endif %}
         
         <div>
-        <h2>{{profiles.username}}</h2>
-        <strong>by {{profiles.display_name}} at {{profiles.join_date}}</strong>
+        <h2>{{profile.username}}</h2>
+        <strong>by {{profile.display_name}} at {{profile.join_date}}</strong>
         <br></br>
-        <strong>Bio: {{profiles.bio_text}}</strong>
+        <strong>Bio: {{profile.bio_text}}</strong>
         {% if request.user.is_authenticated %}
         <p>
             <h3>
@@ -31,18 +31,18 @@ bio, the date created, the username and then to display name.-->
         {% endif %}
 
         <p>
-                <a href="{% url 'show_followers' profiles.pk %}">
-                    Followers: {{ profiles.get_num_followers }}
+                <a href="{% url 'show_followers' profile.pk %}">
+                    Followers: {{ profile.get_num_followers }}
                 </a>
                 <br>
-                <a href="{% url 'show_following' profiles.pk %}">
-                    Following: {{ profiles.get_num_following }}
+                <a href="{% url 'show_following' profile.pk %}">
+                    Following: {{ profile.get_num_following }}
                 </a>
             </p>
             
         </div>
 
-        {% for post in profiles.get_all_posts %}
+        {% for post in profile.get_all_posts %}
 
     <div class="post">
 
