@@ -9,7 +9,7 @@
 <h2>Update this Profile</h2>
  
  
-<form action="{% url 'update_profile' %}" method="POST"
+<form action="{% url 'update_profile' profile.pk %}" method="POST"
     enctype="multipart/form-data">
     {% csrf_token %}
     <table>

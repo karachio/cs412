@@ -22,33 +22,12 @@ bio, the date created, the username and then to display name.-->
         <strong>by {{profile.display_name}} at {{profile.join_date}}</strong>
         <br></br>
         <strong>Bio: {{profile.bio_text}}</strong>
-
         {% if request.user.is_authenticated %}
         <p>
             <h3>
                 <a href="{% url 'update_profile' %}">Update Profile</a>
             </h3>
         </p>
-        {% endif %}
-
-        {% if request.user.is_authenticated and request.user != profile.user %}
-
-            {% if is_following %}
-
-                <form method="POST" action="{% url 'follow' profile.pk %}">
-                    {% csrf_token %}
-                    <button type="submit">Unfollow</button>
-                </form>
-
-            {% else %}
-
-                <form method="POST" action="{% url 'follow' profile.pk %}">
-                    {% csrf_token %}
-                    <button type="submit">Follow</button>
-                </form>
-
-            {% endif %}
-
         {% endif %}
 
         <p>

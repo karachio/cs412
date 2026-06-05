@@ -13,27 +13,7 @@
    
     <div class="result-card">
 
-        <p><strong>Likes: {{ post.get_likes.count }}</strong></p>
-
-        {% if request.user.is_authenticated  %}
-
-            {% if has_liked %}
-
-                <form method="POST" action="{% url 'delete_like' post.pk %}">
-                    {% csrf_token %}
-                    <button type="submit">Unlike</button>
-                </form>
-
-            {% else %}
-
-                <form method="POST" action="{% url 'like' post.pk %}">
-                    {% csrf_token %}
-                    <button type="submit">Like</button>
-                </form>
-
-            {% endif %}
-
-        {% endif %}
+        <p><strong>Likes: {{post.get_likes.count}}</strong></p>
 
         <p>{{ post.caption }}</p>
         <p><small>{{post.timestamp}}</small></p>
