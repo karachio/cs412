@@ -25,6 +25,7 @@ its content for display.-->
                     <p>Logged in as: {{ request.user.username }}</p>
                 {% else %}
                     <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'create_profile' %}">Create Profile</a>
                     <p>Not logged in.</p>
                 {% endif %}
             </nav>

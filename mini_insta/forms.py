@@ -4,6 +4,7 @@
 
 from django import forms
 from .models import *
+from .models import Profile
 
 class CreatePostForm(forms.ModelForm):
     '''A form to add a Post to the database.'''
@@ -23,3 +24,8 @@ class UpdateProfileForm(forms.ModelForm):
         model = Profile
         fields = ['display_name', 'bio_text', 'profile_image_url' ]  # which fields from model should we use
     
+class CreateProfileForm(forms.ModelForm):
+    '''A form to create a profile to the database.'''
+    class Meta:
+        model = Profile
+        fields = ['username', 'display_name', 'bio_text', 'profile_image_url']

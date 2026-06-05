@@ -4,7 +4,7 @@
 # profiledetailview, both needed to retrieve the profiles objects
 
 from django.shortcuts import render
-from .models import Post, Photo, Profile
+from .models import Post, Photo, Profile, Like, Follow
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin ## NEW
 from django.contrib.auth.forms import UserCreationForm ## NEW
@@ -14,10 +14,11 @@ from django.contrib.auth import login # NEW
 # Create your views here.
 
 from .models import Profile
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 import random
-from .forms import UpdateProfileForm
-from django.shortcuts import get_object_or_404
+from .forms import UpdateProfileForm, CreateProfileForm
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.backends import ModelBackend
 
  
  
@@ -36,6 +37,19 @@ class ProfileDetailView(DetailView):
    template_name = 'mini_insta/show_profile.html' 
    context_object_name = 'profile'
    
+   def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        viewed_profile = self.object
+        user_profile = Profile.objects.get(user=self.request.user)
+
+        context['is_following'] = Follow.objects.filter(
+            profile=viewed_profile,
+            follower_profile=user_profile
+        ).exists()
+
+        return context
+   
    
    
 
@@ -45,6 +59,19 @@ class PostDetailView(DetailView):
     model = Post
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        post = self.get_object()
+        user_profile = Profile.objects.get(user=self.request.user)
+
+        context['has_liked'] = Like.objects.filter(
+            post=post,
+            profile=user_profile
+        ).exists()
+
+        return context
     
     
 class CreatePostView(LoginRequiredMixin, CreateView):
@@ -191,6 +218,8 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
     def get_login_url(self):
         return reverse('login')
     
+
+    
     
 class ShowFollowersDetailView(DetailView):
 
@@ -323,3 +352,99 @@ class ShowProfileView(LoginRequiredMixin, DetailView):
 
 class LogoutConfirmationView(TemplateView):
     template_name = "mini_insta/logged_out.html"
+    
+    
+class FollowProfileView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        target_profile = Profile.objects.get(pk=pk)
+
+        # prevent self-follow
+        if user_profile == target_profile:
+            return redirect('show_profile', pk=pk)
+
+        Follow.objects.get_or_create(
+            profile=target_profile,
+            follower_profile=user_profile
+        )
+
+        return redirect('show_profile', pk=pk)
+    
+class DeleteFollowProfileView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        target_profile = Profile.objects.get(pk=pk)
+
+        Follow.objects.filter(
+            profile=target_profile,
+            follower_profile=user_profile
+        ).delete()
+
+        return redirect('show_profile', pk=pk)
+    
+    
+class LikePostView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        post = Post.objects.get(pk=pk)
+
+        # prevent self-like
+        if post.profile == user_profile:
+            return redirect('show_post', pk=pk)
+
+        Like.objects.get_or_create(
+            post=post,
+            profile=user_profile
+        )
+
+        return redirect('show_post', pk=pk)
+    
+class DeleteLikePostView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        post = Post.objects.get(pk=pk)
+
+        Like.objects.filter(
+            post=post,
+            profile=user_profile
+        ).delete()
+
+        return redirect('show_post', pk=pk)
+    
+    
+class CreateProfileView(CreateView):
+    model = Profile
+    form_class = CreateProfileForm
+    template_name = "mini_insta/create_profile_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["user_form"] = UserCreationForm()
+
+        return context
+
+    def form_valid(self, form):
+        user_form = UserCreationForm(self.request.POST)
+
+        if user_form.is_valid():
+            user = user_form.save()
+
+           
+            login(self.request,user,backend='django.contrib.auth.backends.ModelBackend')
+
+           
+            form.instance.user = user
+
+           
+            return super().form_valid(form)
+
+     
+        return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('login')

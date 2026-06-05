@@ -30,6 +30,26 @@ bio, the date created, the username and then to display name.-->
         </p>
         {% endif %}
 
+        {% if request.user.is_authenticated and request.user.profile != profile %}
+
+            {% if is_following %}
+
+                <form method="POST" action="{% url 'delete_follow' profile.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Unfollow</button>
+                </form>
+
+            {% else %}
+
+                <form method="POST" action="{% url 'follow' profile.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Follow</button>
+                </form>
+
+            {% endif %}
+
+        {% endif %}
+
         <p>
                 <a href="{% url 'show_followers' profile.pk %}">
                     Followers: {{ profile.get_num_followers }}
