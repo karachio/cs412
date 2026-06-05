@@ -20,8 +20,8 @@ class Profile(models.Model):
     bio_text = models.TextField(blank=False)
     join_date = models.DateTimeField(auto_now=True)
     profile_image_url = models.URLField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     #function to return string representation
     def __str__(self):
         '''Return a string representation of the Profile object.'''
@@ -156,11 +156,11 @@ class Photo(models.Model):
 
 class Follow(models.Model):
     '''Encapsulate the idea of a Profile of a user on instagram.'''
- 
- 
+
     # data attributes of Follow needed for the user profile on mini_insta:
-    profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="profile")
-    follower_profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="follower_profile")
+    profile = models.ForeignKey("Profile",on_delete=models.CASCADE,related_name="followers")
+    follower_profile = models.ForeignKey("Profile",on_delete=models.CASCADE,related_name="following")
+    
     timestamp = models.DateTimeField(auto_now=True)
     
     

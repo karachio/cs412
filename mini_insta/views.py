@@ -3,8 +3,8 @@
 # Description: the views python files that contains the profilelistview and 
 # profiledetailview, both needed to retrieve the profiles objects
 
-from django.shortcuts import render
-from .models import Post, Photo, Profile
+from django.shortcuts import render, redirect
+from .models import Post, Photo, Profile, Follow, Like
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin ## NEW
 from django.contrib.auth.forms import UserCreationForm ## NEW
@@ -14,12 +14,11 @@ from django.contrib.auth import login # NEW
 # Create your views here.
 
 from .models import Profile
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 import random
 from .forms import UpdateProfileForm, CreateProfileForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.backends import ModelBackend
-
  
  
 class ProfileListView(ListView):
@@ -46,6 +45,19 @@ class PostDetailView(DetailView):
     model = Post
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        post = self.get_object()
+        user_profile = Profile.objects.get(user=self.request.user)
+
+        context['has_liked'] = Like.objects.filter(
+            post=post,
+            profile=user_profile
+        ).exists()
+
+        return context
     
     
 class CreatePostView(LoginRequiredMixin, CreateView):
@@ -319,6 +331,19 @@ class ShowProfileView(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return Profile.objects.get(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        viewed_profile = self.object  
+        user_profile = Profile.objects.get(user=self.request.user)
+
+        context['is_following'] = Follow.objects.filter(
+            profile=viewed_profile,
+            follower_profile=user_profile
+        ).exists()
+
+        return context
     
     
 
@@ -359,3 +384,73 @@ class CreateProfileView(CreateView):
 
     def get_success_url(self):
         return reverse('login')
+    
+    
+class FollowProfileView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        target_profile = Profile.objects.get(pk=pk)
+
+ 
+        if user_profile == target_profile:
+            return redirect('show_profile', pk=pk)
+
+        follow_relation = Follow.objects.filter(
+            profile=target_profile,
+            follower_profile=user_profile
+        )
+
+  
+        if follow_relation.exists():
+            follow_relation.delete()
+
+        else:
+            Follow.objects.create(
+                profile=target_profile,
+                follower_profile=user_profile
+            )
+
+        return redirect('show_profile', pk=pk)  
+    
+class DeleteFollowProfileView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        target_profile = Profile.objects.get(pk=pk)
+
+        Follow.objects.filter(
+            profile=target_profile,
+            follower_profile=user_profile
+        ).delete()
+
+        return redirect('show_profile', pk=pk)
+    
+class LikePostView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        post = Post.objects.get(pk=pk)
+        
+        if post.profile == user_profile:
+            return redirect('show_post', pk=pk)
+
+        Like.objects.get_or_create(
+            post=post,
+            profile=user_profile  
+        )
+
+        return redirect('show_post', pk=pk)
+    
+class DeleteLikePostView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user_profile = Profile.objects.get(user=request.user)
+        post = Post.objects.get(pk=pk)
+
+        Like.objects.filter(
+            post=post,
+            profile=user_profile   
+        ).delete()
+
+        return redirect('show_post', pk=pk)

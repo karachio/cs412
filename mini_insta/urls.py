@@ -3,7 +3,7 @@
 # Description: The url mapping to specific views needed for the mini insta
 
 from django.urls import path
-from .views import ProfileListView, ProfileDetailView, PostDetailView, CreatePostView, UpdateProfileView, DeletePostView, UpdatePostView, ShowFollowersDetailView, ShowFollowingDetailView, ShowFeedView, SearchView, ShowProfileView, LogoutConfirmationView, CreateProfileView
+from .views import ProfileListView, ProfileDetailView, PostDetailView, CreatePostView, UpdateProfileView, DeletePostView, UpdatePostView, ShowFollowersDetailView, ShowFollowingDetailView, ShowFeedView, SearchView, ShowProfileView, LogoutConfirmationView, CreateProfileView, FollowProfileView, DeleteFollowProfileView, LikePostView, DeleteLikePostView
 from django.contrib.auth import views as auth_views
  
  
@@ -25,5 +25,9 @@ urlpatterns = [
     path('logout/',auth_views.LogoutView.as_view(next_page='logout_confirmation'),name='logout'),
     path('logout/confirmation/',LogoutConfirmationView.as_view(),name='logout_confirmation'),
     path('create_profile', CreateProfileView.as_view(), name='create_profile'),
+    path('profile/<int:pk>/follow', FollowProfileView.as_view(), name='follow'),
+    path('profile/<int:pk>/delete_follow', DeleteFollowProfileView.as_view(), name='delete_follow'),
+    path('post/<int:pk>/like', LikePostView.as_view(), name='like'),
+    path('post/<int:pk>/delete_like', DeleteLikePostView.as_view(), name='delete_like'),
 ]
  
