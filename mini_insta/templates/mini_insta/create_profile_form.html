@@ -1,0 +1,30 @@
+<!--
+# File: create_profile_form.html
+# Author: Karachi Onwuanibe (karachio@bu.edu), 6/04/2026
+# Description: The html file that helps in creating a profile in our mini insta -->
+
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+<h2>Create Profile</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <h3>Account Info</h3>
+    <table>
+        {{ user_form.as_table }}
+    </table>
+
+    <h3>Profile Info</h3>
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <input type="submit" value="Create Profile">
+
+</form>
+
+{% endblock %}
