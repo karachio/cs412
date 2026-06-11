@@ -1,3 +1,8 @@
+# File: serializers.py
+# Author: Karachi Onwuanibe (karachio@bu.edu), june 11 2026
+# Description: file responsible for api endpoints
+
+
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Joke, Picture

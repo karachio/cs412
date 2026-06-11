@@ -1,0 +1,109 @@
+/* =========================
+  karachi onwuanibe
+  june 11 2026
+  styles-for-dadjokes.css -> for styling the web app
+========================= */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #d6ecff; 
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1f2a44;
+    margin-bottom: 30px;
+}
+
+
+.joke-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+.joke-card {
+    background-color: #ffffff;
+    padding: 18px 20px;
+    border-radius: 12px;
+
+   
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.joke-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+
+.joke-card a {
+    text-decoration: none;
+    color: #1f2a44;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.joke-card a:hover {
+    color: #0077ff;
+}
+
+
+footer {
+    margin-top: 40px;
+    font-size: 12px;
+    color: #666;
+}
+
+
+.picture-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+.picture-card {
+    background-color: #ffffff;
+    padding: 18px 20px;
+    border-radius: 12px;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-align: center;
+}
+
+.picture-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+
+.picture-card img {
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+
+.subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-top: 5px;
+}

@@ -1,3 +1,7 @@
+# File: models.py
+# Author: Karachi Onwuanibe (karachio@bu.edu), june 11 2026
+# Description: The models for the app
+
 from django.db import models
 
 # Create your models here.

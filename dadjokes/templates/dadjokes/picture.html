@@ -1,6 +1,36 @@
+<!-- 
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+mini_insta/picture.html 
+    display the joke picture
+-->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles-for-dadjokes.css' %}">
+    <title>Picture</title>
+</head>
+
+<body>
+
 <h1>Picture</h1>
 
-<img src="{{ picture.image_url }}" width="400">
+<div class="picture-card">
+    <img src="{{ picture.image_url }}" width="400" />
 
-<p>{{ picture.contributor }}</p>
-<p>{{ picture.timestamp }}</p>
+    <p class="subtitle">
+        {{ picture.contributor }}
+    </p>
+
+    <p class="subtitle">
+        {{ picture.timestamp }}
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,3 +1,8 @@
+# File: urls.py
+# Author: Karachi Onwuanibe (karachio@bu.edu), june 11 2026
+# Description: The url mapping to specific views needed for jokes
+
+
 from django.urls import path
 from .views import *
 

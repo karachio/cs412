@@ -1,3 +1,6 @@
+# karachi onwuanibe, june 11 2026
+# admin.py -> for the admin site
+
 from django.contrib import admin
 
 # Register your models here.

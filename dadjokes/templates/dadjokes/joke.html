@@ -1,5 +1,28 @@
+<!-- 
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+mini_insta/joke.html 
+    display the joke
+-->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles-for-dadjokes.css' %}">
+    <title>Joke</title>
+</head>
+
+<body>
+
 <h1>Joke</h1>
 
 <p>{{ joke.text }}</p>
 <p>{{ joke.contributor }}</p>
 <p>{{ joke.timestamp }}</p>
+
+</body>
+</html>

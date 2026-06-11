@@ -1,10 +1,34 @@
+<!-- 
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+mini_insta/jokes.html 
+    display all the jokes
+-->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles-for-dadjokes.css' %}">
+    <title>All Jokes</title>
+</head>
+
+<body>
+
 <h1>All Jokes</h1>
 
-{% for joke in jokes %}
-    <p>
-        <a href="{% url 'joke' joke.pk %}">
-            {{ joke.text }}
-        </a>
-    </p>
-{% endfor %}
+<div class="joke-container">
+    {% for joke in jokes %}
+        <div class="joke-card">
+            <a href="{% url 'joke' joke.pk %}">
+                {{ joke.text }}
+            </a>
+        </div>
+    {% endfor %}
+</div>
 
+</body>
+</html>

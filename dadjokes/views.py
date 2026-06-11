@@ -1,3 +1,8 @@
+# File: views.py
+# Author: Karachi Onwuanibe (karachio@bu.edu), june 11 2026
+# Description: The views file for joke
+
+
 from django.shortcuts import render
 
 # Create your views here.

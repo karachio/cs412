@@ -1,10 +1,37 @@
-<h1>Random Dad Joke</h1>
+<!-- 
+Karachi Onwuanibe
+karachio@bu.edu
 
-<p>{{ joke.text }}</p>
-<p>Contributor: {{ joke.contributor }}</p>
+description:
+mini_insta/random.html 
+    display the picture and joke at random.
+-->
 
-<hr>
+{% load static %}
 
-<img src="{{ picture.image_url }}" width="400">
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles-for-dadjokes.css' %}">
+    <title>Random Joke</title>
+</head>
 
-<p>Contributor: {{ picture.contributor }}</p>
+<body>
+
+<h1>Random Dad Joke </h1>
+
+<div class="joke-card">
+    <p class="title-text">{{ joke.text }}</p>
+    <p class="subtitle">Contributor: {{ joke.contributor }}</p>
+</div>
+
+<hr style="width: 80%; margin: 20px 0;">
+
+<div class="picture-card">
+    <img src="{{ picture.image_url }}" width="400" />
+
+    <p class="subtitle">Contributor: {{ picture.contributor }}</p>
+</div>
+
+</body>
+</html>
