@@ -31,27 +31,31 @@ class ProfileListView(ListView):
     context_object_name = 'profiles' 
  
 class ProfileDetailView(DetailView):
-   '''Show the details for one profile on mini insta.'''
-   
-   model = Profile
-   template_name = 'mini_insta/show_profile.html' 
-   context_object_name = 'profile'
-   
-   def get_context_data(self, **kwargs):
+    '''Show the details for one profile on mini insta.'''
+    
+    model = Profile
+    template_name = 'mini_insta/show_profile.html' 
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         viewed_profile = self.object
-        user_profile = Profile.objects.get(user=self.request.user)
 
-        context['is_following'] = Follow.objects.filter(
-            profile=viewed_profile,
-            follower_profile=user_profile
-        ).exists()
+        if self.request.user.is_authenticated:
+            user_profile = Profile.objects.get(user=self.request.user)
+
+            context['is_following'] = Follow.objects.filter(
+                profile=viewed_profile,
+                follower_profile=user_profile
+            ).exists()
+        else:
+            context['is_following'] = False
 
         return context
-   
-   
-   
+    
+    
+    
 
 class PostDetailView(DetailView):
     '''Display one post on the profile.'''
@@ -62,16 +66,21 @@ class PostDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
+    
         post = self.get_object()
-        user_profile = Profile.objects.get(user=self.request.user)
-
-        context['has_liked'] = Like.objects.filter(
-            post=post,
-            profile=user_profile
-        ).exists()
-
+    
+        if self.request.user.is_authenticated:
+            user_profile = Profile.objects.get(user=self.request.user)
+    
+            context['has_liked'] = Like.objects.filter(
+                post=post,
+                profile=user_profile
+            ).exists()
+        else:
+            context['has_liked'] = False
+    
         return context
+    
     
     
 class CreatePostView(LoginRequiredMixin, CreateView):

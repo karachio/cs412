@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from .views import * #ShowAllView, ArticleView, RandomArticleView
 from django.contrib.auth import views as auth_views    ## NEW
 from .views import * # our view class definition 
+
  
  
 urlpatterns = [
@@ -16,6 +17,8 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'), ## NEW
 	path('logout/', auth_views.LogoutView.as_view(next_page='show_all'), name='logout'), ## NEW
     path('register/', RegistrationView.as_view(), name='register'),
+    path(r'api/articles/', ArticleListAPIView.as_view()),
+    path(r'api/article/<int:pk>', ArticleDetailAPIView.as_view()),
 ]
  
  

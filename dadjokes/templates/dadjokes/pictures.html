@@ -1,0 +1,10 @@
+<h1>All Pictures</h1>
+
+{% for picture in pictures %}
+    <p>
+        <a href="{% url 'picture' picture.pk %}">
+            Picture {{ picture.pk }}
+        </a>
+    </p>
+{% endfor %}
+

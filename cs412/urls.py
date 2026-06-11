@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("hw/", include("hw.urls")),
@@ -27,6 +28,8 @@ urlpatterns = [
     path("restaurant/", include("restaurant.urls")),
     path('blog/', include('blog.urls')), # include the URLs from our blog project's urls.py file
     path('mini_insta/', include('mini_insta.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('dadjokes/', include('dadjokes.urls'))
 ]
 
 from django.conf.urls.static import static

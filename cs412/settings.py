@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "restaurant", # assignment 2
     "blog", # new app
     "mini_insta", # assignment 3
+    "dadjokes", #assignment 7
+    "rest_framework", 
 ]
 
 MIDDLEWARE = [
@@ -142,3 +144,7 @@ if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     STATIC_URL = '/karachio/static/'
     MEDIA_URL = '/karachio/media/'
     
+REST_FRAMEWORK = {
+  'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+  'PAGE_SIZE': 10
+}

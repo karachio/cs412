@@ -1,0 +1,10 @@
+<h1>All Jokes</h1>
+
+{% for joke in jokes %}
+    <p>
+        <a href="{% url 'joke' joke.pk %}">
+            {{ joke.text }}
+        </a>
+    </p>
+{% endfor %}
+
