@@ -455,3 +455,26 @@ input[type="submit"]:hover {
 .feed-post p {
     margin: 5px 0;
 }
+
+.btn-green {
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.btn-green:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-red {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.btn-red:hover {
+    background-color: #dc3545;
+    color: white;
+}
+

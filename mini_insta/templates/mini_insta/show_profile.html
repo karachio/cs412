@@ -22,12 +22,14 @@ bio, the date created, the username and then to display name.-->
         <strong>by {{profile.display_name}} at {{profile.join_date}}</strong>
         <br></br>
         <strong>Bio: {{profile.bio_text}}</strong>
-        {% if request.user.is_authenticated %}
-        <p>
-            <h3>
-                <a href="{% url 'update_profile' %}">Update Profile</a>
-            </h3>
-        </p>
+        {% if request.user.is_authenticated and request.user == profile.user %}
+            <p>
+                <h3>
+                    <a href="{% url 'update_profile' %}">Update Profile</a>
+                    <br><br>
+                    <a href="{% url 'create_post' %}">Create Post</a>
+                </h3>
+            </p>
         {% endif %}
 
         {% if request.user.is_authenticated and request.user.profile != profile %}
@@ -81,8 +83,11 @@ bio, the date created, the username and then to display name.-->
     </div>
 
 {% endfor %}
+
+
+
     </article>
- 
+<a href="{% url 'show_all_profiles' %}" class="back-link" style="width: fit-content;">Back to All Profiles</a>
  
 </main>
 {% endblock %}

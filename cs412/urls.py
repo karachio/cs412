@@ -28,7 +28,7 @@ urlpatterns = [
     path("restaurant/", include("restaurant.urls")),
     path('blog/', include('blog.urls')), # include the URLs from our blog project's urls.py file
     path('mini_insta/', include('mini_insta.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
+  #  path('accounts/', include('django.contrib.auth.urls')),
     path('dadjokes/', include('dadjokes.urls'))
 ]
 

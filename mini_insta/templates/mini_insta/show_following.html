@@ -19,6 +19,7 @@ mini_insta/show_following.html
 <ul>
     {% for user in profile.get_following %}
         <li>
+            <a href="{% url 'show_profile' user.pk %}">
             {{user.username}} ({{user.display_name}})
         </li>
     {% empty %}

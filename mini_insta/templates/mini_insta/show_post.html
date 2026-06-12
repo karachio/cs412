@@ -77,11 +77,11 @@
 
     {% if request.user.is_authenticated %}
 
-        <a href="{% url 'update_post' post.pk %}" class="btn">
+        <a href="{% url 'update_post' post.pk %}" class="btn btn-green">
             Update Post
         </a>
 
-        <a href="{% url 'delete_post' post.pk %}" class="btn cancel-link">
+        <a href="{% url 'delete_post' post.pk %}" class="btn btn-red">
             Delete Post
         </a>
 
