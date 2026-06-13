@@ -322,6 +322,8 @@ class SearchView(LoginRequiredMixin, ListView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse('login'))
         
         try:
             self.profile = Profile.objects.get(user=request.user)
@@ -456,4 +458,4 @@ class CreateProfileView(CreateView):
         return self.form_invalid(form)
 
     def get_success_url(self):
-        return reverse('login')
+        return reverse('show_all_profiles')
