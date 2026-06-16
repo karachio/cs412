@@ -1,0 +1,28 @@
+
+<!-- 
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/project_detail.html 
+    display the details of a project
+-->
+
+<html>
+<head><title>{{ project.title }}</title></head>
+<body>
+
+<a href="{% url 'project-list' %}">← Back to all projects</a>
+
+<h1>{{ project.title }}</h1>
+<p>by {{ project.creator }}</p>
+<p>{{ project.description }}</p>
+<p>Difficulty: {{ project.difficulty_level }}</p>
+<p>Status: {{ project.project_status }}</p>
+<p>Created: {{ project.date_created }}</p>
+
+<a href="{% url 'add-comment' project.pk %}">Add Comment</a> |
+<a href="{% url 'add-yarn' project.pk %}">Add Yarn</a>
+
+</body>
+</html>

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "mini_insta", # assignment 3
     "dadjokes", #assignment 7
     "rest_framework", 
+    "crochet", # project
 ]
 
 MIDDLEWARE = [
