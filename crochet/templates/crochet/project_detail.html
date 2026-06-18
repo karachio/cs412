@@ -1,4 +1,3 @@
-
 <!-- 
 Karachi Onwuanibe
 karachio@bu.edu
@@ -7,22 +6,103 @@ description:
 crochet/project_detail.html 
     display the details of a project
 -->
+{% extends 'crochet/base.html' %}
 
-<html>
-<head><title>{{ project.title }}</title></head>
-<body>
+{% load static %}
 
-<a href="{% url 'project-list' %}">← Back to all projects</a>
+
+
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'project-list' %}" class="btn btn-secondary">
+    ← Back to all projects
+</a>
+<br><br>
 
 <h1>{{ project.title }}</h1>
+
 <p>by {{ project.creator }}</p>
+
+{% if project.image_file %}
+<div class="image-frame">
+    <img src="{{ project.image_file.url }}" alt="{{ project.title }}" class="project-image">
+</div>
+{% endif %}
+
 <p>{{ project.description }}</p>
+
 <p>Difficulty: {{ project.difficulty_level }}</p>
+
 <p>Status: {{ project.project_status }}</p>
+
 <p>Created: {{ project.date_created }}</p>
 
-<a href="{% url 'add-comment' project.pk %}">Add Comment</a> |
-<a href="{% url 'add-yarn' project.pk %}">Add Yarn</a>
+<h2>Yarn Used</h2>
 
-</body>
-</html>
+<div class="yarn-list">
+
+{% for yarn in project.yarn_set.all %}
+    <div class="yarn-chip">
+        <strong>{{ yarn.name }}</strong><br>
+        {{ yarn.brand }} • {{ yarn.color }}
+    </div>
+{% empty %}
+    <p class="empty">No yarn added yet.</p>
+{% endfor %}
+
+</div>
+
+<div class="action-row">
+    <a href="{% url 'update-project' project.pk %}" class="btn btn-secondary">
+        Edit Project
+    </a>
+
+    <a href="{% url 'delete-project' project.pk %}" class="btn btn-danger">
+        Delete Project
+    </a>
+</div>
+
+<h2>Comments</h2>
+
+<div class="comment-list">
+
+{% for comment in comments %}
+    <div class="comment">
+        <div class="commenter">{{ comment.commenter }}</div>
+        <div class="comment-text">{{ comment.comment }}</div>
+    </div>
+{% empty %}
+    <p class="empty">No comments yet.</p>
+{% endfor %}
+
+</div>
+
+<div class="action-row">
+
+    <div class="favorites-count">
+        {{ favorites }} ❤️ 
+    </div>
+
+</div>
+
+<form method="POST" action="{% url 'favorite-project' project.pk %}" class="favorite-form">
+    {% csrf_token %}
+    <input type="hidden" name="favoriter" value="anonymous">
+    <input type="submit" value="❤️ Add to Favorites">
+</form>
+
+<div class="action-row">
+
+    <a href="{% url 'add-comment' project.pk %}" class="btn btn-primary">
+        + Add Comment
+    </a>
+
+    <a href="{% url 'add-yarn' project.pk %}" class="btn btn-sage">
+        + Add Yarn
+    </a>
+
+</div>
+
+{% endblock %}

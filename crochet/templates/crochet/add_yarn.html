@@ -6,3 +6,72 @@ description:
 crochet/add_yarn.html 
     to add yarn type
 -->
+{% extends 'crochet/base.html' %}
+
+{% block title %}Add Yarn{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'project-detail' project.pk %}" class="btn btn-secondary">
+    ← Back to {{ project.title }}
+</a>
+
+<br><br>
+
+<div class="yarn-header">
+    <h1>🧶 Add Yarn to “{{ project.title }}”</h1>
+    <p class="subtitle">
+        Think of this as building the “material recipe” for your project.
+        Every yarn adds texture, color, and personality.
+    </p>
+</div>
+
+<hr>
+
+<div class="project-preview">
+    <h3>Current Yarn Palette</h3>
+
+    {% if project.yarn_set.all %}
+        <div class="yarn-preview-grid">
+            {% for yarn in project.yarn_set.all %}
+                <div class="yarn-chip">
+                    <strong>{{ yarn.name }}</strong><br>
+                    <small>{{ yarn.brand }} • {{ yarn.color }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty">No yarn added yet — this project is waiting for its first thread ✨</p>
+    {% endif %}
+</div>
+
+<hr>
+
+<div class="add-yarn-section">
+    <h3>✨ Add a New Yarn</h3>
+    <p>Describe the yarn you used or plan to use in this project.</p>
+
+    <form method="POST" class="yarn-form">
+        {% csrf_token %}
+
+        <div class="form-card">
+            {{ form.as_p }}
+        </div>
+<br><br>
+        <button type="submit" class="btn btn-primary">
+            + Weave Yarn into Project
+        </button>
+    </form>
+</div>
+
+<hr>
+
+<div class="yarn-tips">
+    <h4>💡 Tip</h4>
+    <p>
+        Many crocheters combine multiple yarn types to create texture contrast; 
+        try mixing colors or brands to make your project more unique.
+    </p>
+</div>
+
+{% endblock %}

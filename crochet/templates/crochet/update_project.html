@@ -1,0 +1,46 @@
+<!--
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/update_project.html
+    form to update a project
+-->
+
+{% extends 'crochet/base.html' %}
+{% load static %}
+
+
+
+{% block title %}Update Project{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'project-detail' object.pk %}" class="btn btn-secondary">
+    ← Back to project
+    </a>
+    <br><br>
+
+<div class="page-header">
+    <h2>Update Project</h2>
+    <div class="subtitle">Edit your crochet project details</div>
+</div>
+
+<div class="form-card">
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <table>
+            {{ form.as_table }}
+        </table>
+
+        <div class="action-row" style="margin-top: 1.5rem;">
+            <input type="submit" value="Save Changes" class="btn btn-primary">
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -6,3 +6,44 @@ description:
 crochet/create_project.html 
     to create a project
 -->
+
+{% extends 'crochet/base.html' %}
+{% load static %}
+
+{% block title %}Create Project{% endblock %}
+
+{% block content %}
+
+<div class="page">
+
+    <div class="page-header">
+        <h1>Create New Project</h1>
+        <p class="subtitle">Add your crochet project 🧶</p>
+    </div>
+
+    <div class="form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <table>
+                {{ form.as_table }}
+            </table>
+
+            <div class="action-row">
+
+                <input type="submit" value="Create Project" class="btn btn-primary">
+
+                <a href="{% url 'project-list' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

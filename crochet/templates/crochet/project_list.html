@@ -7,26 +7,40 @@ crochet/project_list.html
     displays list of projects
 -->
 
+{% extends 'crochet/base.html' %}
 
+{% block title %}Crochet Projects{% endblock %}
 
-<html>
-<head><title>Crochet Projects</title></head>
-<body>
+{% block content %}
 
 <h1>All Projects</h1>
-<a href="{% url 'create-project' %}">Add New Project</a>
+
+<br><br>
 
 {% for project in projects %}
     <div>
-        <a href="{% url 'project-detail' project.pk %}">{{ project.title }}</a>
+        
+        <a href="{% url 'project-detail' project.pk %}">
+            {{ project.title }}
+        </a>
+
         <p>by {{ project.creator }}</p>
         <p>{{ project.description }}</p>
-        <p>Difficulty: {{ project.difficulty_level }}.  Status: {{ project.project_status }}</p>
+        <p>
+            Difficulty: {{ project.difficulty_level }}.
+            Status: {{ project.project_status }}
+        </p>
     </div>
+
     <hr>
 {% empty %}
     <p>No projects yet.</p>
 {% endfor %}
 
-</body>
-</html>
+<a href="{% url 'create-project' %}" class="btn btn-primary">
+    + Add New Project
+</a>
+
+<br><br>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+<!--
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/delete_project.html
+    confirm deletion of a project
+-->
+
+{% extends 'crochet/base.html' %}
+{% load static %}
+
+{% block title %}Delete Project{% endblock %}
+
+{% block content %}
+
+<div class="page">
+    <a href="{% url 'project-detail' object.pk %}" class="btn btn-secondary">
+    ← Back to project
+    </a>
+    <br><br>
+
+    <div class="delete-card">
+
+        <h2>Delete Project</h2>
+
+        <p>
+            Are you sure you want to delete
+            <strong>"{{ object.title }}"</strong>?
+        </p>
+
+        <p class="empty">
+            This action cannot be undone.
+        </p>
+
+        <form method="POST" class="action-row">
+            {% csrf_token %}
+            <input type="submit" value="Yes, delete" class="btn btn-danger">
+            <a href="{% url 'project-detail' object.pk %}" class="btn btn-secondary">
+                Cancel
+            </a>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

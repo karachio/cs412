@@ -1,0 +1,36 @@
+<!--
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/base.html
+    base template for all pages
+-->
+
+{% load static %}
+
+<html>
+<head>
+    <title>{% block title %}Crochet Projects{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'styles-for-crochet.css' %}">
+</head>
+
+<body>
+
+<nav>
+    <a href="{% url 'project-list' %}">All Projects</a>
+    
+    <a href="{% url 'create-project' %}">New Project</a>
+</nav>
+
+
+<div class="page">
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+</body>
+</html>

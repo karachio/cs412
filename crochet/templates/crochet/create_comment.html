@@ -6,3 +6,29 @@ description:
 crochet/create_comment.html 
     to create a comment on a project
 -->
+
+{% extends 'crochet/base.html' %}
+{% load static %}
+
+
+
+{% block title %}Add Comment{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'project-detail' object.pk %}" class="btn btn-secondary">
+    ← Back to project
+    </a>
+    <br><br>
+
+<h2>Add a Comment</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Post Comment">
+</form>
+
+{% endblock %}

@@ -13,4 +13,6 @@ urlpatterns = [
     path('project/<int:pk>/comment/', views.CreateCommentView.as_view(), name='add-comment'),
     path('project/<int:pk>/yarn/', views.AddYarnView.as_view(), name='add-yarn'),
     path('project/<int:pk>/favorite/', views.FavoriteProjectView.as_view(), name='favorite-project'),
+    path('project/<int:pk>/update/', views.UpdateProjectView.as_view(), name='update-project'),
+    path('project/<int:pk>/delete/', views.DeleteProjectView.as_view(), name='delete-project'),
 ]
