@@ -24,7 +24,7 @@ mini_insta/pictures.html
     {% for picture in pictures %}
         <div class="picture-card">
             <a href="{% url 'picture' picture.pk %}">
-                Picture {{ picture.pk }}
+                <img src="{{ picture.image_url }}" alt="Picture {{ picture.pk }}">
             </a>
         </div>
     {% endfor %}

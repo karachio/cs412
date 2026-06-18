@@ -18,7 +18,7 @@ urlpatterns = [
     path(r'api/jokes/<int:pk>/', JokeDetailAPIView.as_view()),
     path(r'api/pictures/', PictureListAPIView.as_view()),
     path(r'api/pictures/<int:pk>/', PictureDetailAPIView.as_view()),
-    path(r'api/', RandomJokeAPIView.as_view()),
+    #path(r'api/', RandomJokeAPIView.as_view()),
     path(r'api/random/', RandomJokeAPIView.as_view()),
     path(r'api/random_picture/', RandomPictureAPIView.as_view()),
 ]
