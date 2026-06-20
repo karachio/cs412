@@ -16,7 +16,7 @@ crochet/create_comment.html
 
 {% block content %}
 
-<a href="{% url 'project-detail' object.pk %}" class="btn btn-secondary">
+<a href="{% url 'project-detail' project.pk %}" class="btn btn-secondary">
     ← Back to project
     </a>
     <br><br>
@@ -28,7 +28,8 @@ crochet/create_comment.html
     <table>
         {{ form.as_table }}
     </table>
-    <input type="submit" value="Post Comment">
+    <br><br>
+    <input type="submit" value="Post Comment" class="btn btn-secondary">
 </form>
 
 {% endblock %}

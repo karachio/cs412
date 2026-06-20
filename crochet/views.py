@@ -9,12 +9,26 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.views import View
 from django.urls import reverse, reverse_lazy
 from .models import Project, Comment, Yarn, Favorite
+from django.db.models import Q
 
 # for the class projectlistview to show list of projects
 class ProjectListView(ListView):
     model = Project
     template_name = 'crochet/project_list.html'
     context_object_name = 'projects'
+    
+    def get_queryset(self):
+        queryset = Project.objects.all()
+        category = self.request.GET.get('category', '')
+        if category:
+            queryset = queryset.filter(category__icontains=category)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['selected_category'] = self.request.GET.get('category', '')
+        context['categories'] = Project.objects.exclude(category='').values_list('category', flat=True).distinct()
+        return context
 
 # for the class projectdetailview to show project detail
 class ProjectDetailView(DetailView):
@@ -26,13 +40,36 @@ class ProjectDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(project=self.object)
         context['favorites'] = Favorite.objects.filter(project=self.object).count()
+
+        yarns = Yarn.objects.filter(project=self.object)
+        context['yarns'] = yarns
+
+        yarn_brands = list(yarns.values_list('brand', flat=True))
+        yarn_names = list(yarns.values_list('name', flat=True))
+
+        similar_raw = Project.objects.filter(
+            Q(yarn__brand__in=yarn_brands) | Q(yarn__name__in=yarn_names)
+        ).exclude(pk=self.object.pk).distinct()[:3]
+
+        # attach matching yarn info to each similar project
+        similar_projects = []
+        for p in similar_raw:
+            matching = Yarn.objects.filter(project=p).filter(
+                Q(brand__in=yarn_brands) | Q(name__in=yarn_names)
+            )
+            similar_projects.append({
+                'project': p,
+                'matching_yarn': matching,
+            })
+
+        context['similar_projects'] = similar_projects
         return context
 
 # for the class createprojectview to create projects
 class CreateProjectView(CreateView):
     model = Project
     template_name = 'crochet/create_project.html'
-    fields = ['title', 'creator', 'description', 'difficulty_level', 'image_file', 'project_status']
+    fields = ['title', 'creator', 'description', 'difficulty_level', 'image_file', 'project_status', 'category']
 
     def get_success_url(self):
         return reverse('project-list')
@@ -88,7 +125,7 @@ class FavoriteProjectView(View):
 class UpdateProjectView(UpdateView):
     model = Project
     template_name = 'crochet/update_project.html'
-    fields = ['title', 'creator', 'description', 'difficulty_level', 'image_file', 'project_status']
+    fields = ['title', 'creator', 'description', 'difficulty_level', 'image_file', 'project_status', 'category']
 
     def get_success_url(self):
         return reverse('project-detail', kwargs={'pk': self.kwargs['pk']})
@@ -101,3 +138,25 @@ class DeleteProjectView(DeleteView):
     success_url = reverse_lazy('project-list')
     
     
+
+
+# for the class searchyarnview, to search for yarn similarities
+class SearchYarnView(ListView):
+    model = Yarn
+    template_name = 'crochet/yarn_search.html'
+    context_object_name = 'yarns'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        if query:
+            return Yarn.objects.filter(
+                Q(name__icontains=query) |
+                Q(brand__icontains=query) |
+                Q(color__icontains=query)
+            )
+        return Yarn.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        return context

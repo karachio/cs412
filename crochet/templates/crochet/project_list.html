@@ -15,6 +15,30 @@ crochet/project_list.html
 
 <h1>All Projects</h1>
 
+<form method="GET" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+    <select name="category" onchange="this.form.submit()" style="
+        padding: 0.6rem 0.9rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.95rem;
+        font-family: 'Lato', sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        outline: none;
+        cursor: pointer;
+    ">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+            <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>
+                {{ cat }}
+            </option>
+        {% endfor %}
+    </select>
+    {% if selected_category %}
+        <a href="{% url 'project-list' %}" class="btn btn-secondary">Clear filter</a>
+    {% endif %}
+</form>
+
 <br><br>
 
 {% for project in projects %}

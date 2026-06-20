@@ -15,4 +15,5 @@ urlpatterns = [
     path('project/<int:pk>/favorite/', views.FavoriteProjectView.as_view(), name='favorite-project'),
     path('project/<int:pk>/update/', views.UpdateProjectView.as_view(), name='update-project'),
     path('project/<int:pk>/delete/', views.DeleteProjectView.as_view(), name='delete-project'),
+    path('yarn/search/', views.SearchYarnView.as_view(), name='yarn-search'),
 ]

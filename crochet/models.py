@@ -19,6 +19,7 @@ class Project(models.Model):
     # image_url = models.URLField(blank=True) ## new
     image_file = models.ImageField(blank=True) # so the user can upload an image of their progress
     project_status = models.TextField(blank=False)
+    category = models.TextField(blank=True, default='')
     date_created = models.DateTimeField(auto_now=True)
     
     

@@ -1,0 +1,36 @@
+{% extends 'crochet/base.html' %}
+
+{% block title %}Search Yarn{% endblock %}
+
+{% block content %}
+
+<h1>Search Yarn</h1>
+
+<div class="form-card" style="margin-bottom: 2rem;">
+    <form method="GET">
+        <label for="q">Search by name, brand, or color</label>
+        <input type="text" name="q" id="q" value="{{ query }}" placeholder="e.g. merino, Caron, dusty rose...">
+        <div class="form-actions">
+            <input type="submit" value="Search" class="btn btn-primary">
+            {% if query %}
+                <a href="{% url 'yarn-search' %}" class="btn btn-secondary">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+{% if query %}
+    <h2>Results for "{{ query }}"</h2>
+    {% if yarns %}
+        {% for yarn in yarns %}
+            <div class="project-card">
+                <h3><a href="{% url 'project-detail' yarn.project.pk %}">{{ yarn.project.title }}</a></h3>
+                <p>Yarn: {{ yarn.name }} · Brand: {{ yarn.brand }} · Color: {{ yarn.color }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty">No yarn found matching "{{ query }}".</p>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
