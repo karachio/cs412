@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import View
 from django.urls import reverse, reverse_lazy
-from .models import Project, Comment, Yarn, Favorite
+from .models import Project, Review, Yarn, Favorite
 from django.db.models import Q
 
 # for the class projectlistview to show list of projects
@@ -58,7 +58,7 @@ class ProjectDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comments'] = Comment.objects.filter(project=self.object)
+        context['reviews'] = Review.objects.filter(project=self.object)
         context['favorites'] = Favorite.objects.filter(project=self.object).count()
 
         yarns = Yarn.objects.filter(project=self.object)
@@ -95,11 +95,11 @@ class CreateProjectView(CreateView):
         return reverse('project-list')
 
 
-# for the class createcommentview to create comments
-class CreateCommentView(CreateView):
-    model = Comment
-    template_name = 'crochet/create_comment.html'
-    fields = ['commenter', 'comment']
+# for the class createreviewview to create reviews
+class CreateReviewView(CreateView):
+    model = Review
+    template_name = 'crochet/create_review.html'
+    fields = ['rating', 'review']
 
     def form_valid(self, form):
         form.instance.project = get_object_or_404(Project, pk=self.kwargs['pk'])
@@ -107,7 +107,7 @@ class CreateCommentView(CreateView):
 
     def get_success_url(self):
         return reverse('project-detail', kwargs={'pk': self.kwargs['pk']})
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['project'] = get_object_or_404(Project, pk=self.kwargs['pk'])

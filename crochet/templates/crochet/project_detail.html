@@ -53,16 +53,23 @@ crochet/project_detail.html
             <a href="{% url 'delete-project' project.pk %}" class="btn btn-danger">Delete Project</a>
         </div>
 
-        <h2>Comments</h2>
+        <h2>Reviews</h2>
         <div class="comment-list">
-            {% for comment in comments %}
-                <div class="comment">
-                    <div class="commenter">{{ comment.commenter }}</div>
-                    <div class="comment-text">{{ comment.comment }}</div>
-                </div>
-            {% empty %}
-                <p class="empty">No comments yet.</p>
-            {% endfor %}
+            {% for review in reviews %}
+    <div class="comment">
+
+        <div class="commenter">
+            ⭐ {{ review.rating }} / 5
+        </div>
+
+        <div class="comment-text">
+            {{ review.review }}
+        </div>
+
+    </div>
+{% empty %}
+    <p class="empty">No reviews yet.</p>
+{% endfor %}
         </div>
 
         <div class="action-row">
@@ -76,9 +83,11 @@ crochet/project_detail.html
         </form>
 
         <div class="action-row">
-            <a href="{% url 'add-comment' project.pk %}" class="btn btn-primary">+ Add Comment</a>
+            <a href="{% url 'add-review' project.pk %}" class="btn btn-primary">+ Add Review</a>
             <a href="{% url 'add-yarn' project.pk %}" class="btn btn-sage">+ Add Yarn</a>
         </div>
+
+        
 
     </div>
 
@@ -94,25 +103,30 @@ crochet/project_detail.html
     padding: 1.2rem 1.4rem;
     position: sticky;
     top: 80px;
+    align-self: flex-start;
 ">
-    <h3 style="margin-top: 0; margin-bottom: 1rem;">🧶 Similar Projects</h3>
+    <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">🧶 Similar Projects</h3>
     {% for item in similar_projects %}
         <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
-            <a href="{% url 'project-detail' item.project.pk %}" style="font-weight: 700; color: var(--brown);">
-                {{ item.project.title }}
-            </a>
-            <p class="meta" style="font-size: 0.82rem; margin-top: 0.2rem;">by {{ item.project.creator }}</p>
+            <a href="{% url 'project-detail' item.project.pk %}" style="
+                font-weight: 700;
+                color: var(--brown);
+                font-size: 1rem;
+                display: block;
+                margin-bottom: 0.2rem;
+            ">{{ item.project.title }}</a>
+            <p style="font-size: 0.85rem; color: var(--muted); margin: 0 0 0.4rem;">by {{ item.project.creator }}</p>
             {% for yarn in item.matching_yarn %}
                 <span style="
                     display: inline-block;
-                    margin-top: 0.4rem;
+                    margin-top: 0.2rem;
                     padding: 2px 8px;
                     background: var(--sage-light);
                     color: #2e5c3e;
                     border-radius: 20px;
                     font-size: 0.75rem;
-                    font-weight: 700;
-                ">{{ yarn.name }} · {{ yarn.brand }}</span>
+                    font-weight: 600;
+                ">{{ yarn.brand }} · {{ yarn.color }}</span>
             {% endfor %}
         </div>
     {% endfor %}

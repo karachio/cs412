@@ -1,0 +1,37 @@
+<!-- 
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/create_review.html 
+    to create a review on a project
+-->
+
+{% extends 'crochet/base.html' %}
+{% load static %}
+
+{% block title %}Add Review{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'project-detail' project.pk %}" class="btn btn-secondary">
+    ← Back to project
+</a>
+<br><br>
+
+<h2>Add a Review</h2>
+
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <div class="form-actions">
+            <input type="submit" value="Post Review">
+            <a href="{% url 'project-detail' project.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

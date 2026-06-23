@@ -52,19 +52,18 @@ class Project(models.Model):
         return filled + empty
         
     
-class Comment(models.Model):
-    '''Encapsulate the idea of an Comment by some commentor.'''
+class Review(models.Model):
+    '''Encapsulate the idea of an Project by some creator.'''
     
     
-    # data attributes of a Comment:
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    commenter = models.TextField(blank=False)
-    comment = models.TextField(blank=False)
+    rating = models.IntegerField(choices=Project.RATING_CHOICES, default=5)
+    review = models.TextField(blank=False)
     timestamp = models.DateTimeField(auto_now=True)
 
+    '''Return a string representation of this Project object.'''
     def __str__(self):
-        '''Return a string representation of this Comment object.'''
-        return f'{self.commenter}: {self.comment}'
+        return f'{self.rating} stars - {self.review}'
     
     
     
