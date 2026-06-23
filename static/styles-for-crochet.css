@@ -564,3 +564,20 @@ nav a:hover {
     transform: translateY(-2px);
 }
 
+
+
+nav .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--cream);
+    text-decoration: none;
+    margin-right: auto;
+    letter-spacing: 0.02em;
+    border-bottom: none;
+}
+
+nav .brand:hover {
+    color: var(--blush);
+    border-bottom: none;
+    text-decoration: none;
+}

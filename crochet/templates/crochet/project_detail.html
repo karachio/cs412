@@ -18,78 +18,105 @@ crochet/project_detail.html
 
     <div style="flex: 1;">
 
-        <a href="{% url 'project-list' %}" class="btn btn-secondary">← Back to all projects</a>
-        <br><br>
+    <a href="{% url 'project-list' %}" class="btn btn-secondary">← Back to all projects</a>
+    <br><br>
 
-        <h1>{{ project.title }}</h1>
-        <p>by {{ project.creator }}</p>
+    <h1>{{ project.title }}</h1>
+    <p style="color: var(--muted); font-size: 1rem; margin-bottom: 1.5rem;">by {{ project.creator }}</p>
 
-        {% if project.image_file %}
-        <div class="image-frame">
-            <img src="{{ project.image_file.url }}" alt="{{ project.title }}" class="project-image">
-        </div>
+    {% if project.image_file %}
+    <div class="image-frame">
+        <img src="{{ project.image_file.url }}" alt="{{ project.title }}" class="project-image">
+    </div>
+    {% endif %}
+
+    <p style="font-size: 1rem; margin-bottom: 1.5rem;">{{ project.description }}</p>
+
+    <!-- Info badges row -->
+    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem;">
+        <span class="badge badge-difficulty">{{ project.get_difficulty_level_display }}</span>
+        <span class="badge badge-status">{{ project.get_project_status_display }}</span>
+        {% if project.category %}
+            <span class="badge" style="background: #fde8d8; color: var(--terracotta);">{{ project.category }}</span>
         {% endif %}
-
-        <p>{{ project.description }}</p>
-        <p>Difficulty: {{ project.get_difficulty_level_display }}</p>
-        <p>Status: {{ project.get_project_status_display }}</p>
-        <p>Rating: {{ project.star_display }}</p>
-        <p>Created: {{ project.date_created }}</p>
-
-        <h2>Yarn Used</h2>
-        <div class="yarn-list">
-            {% for yarn in project.yarn_set.all %}
-                <div class="yarn-chip">
-                    <strong>{{ yarn.name }}</strong><br>
-                    {{ yarn.brand }} • {{ yarn.color }}
-                </div>
-            {% empty %}
-                <p class="empty">No yarn added yet.</p>
-            {% endfor %}
-        </div>
-
-        <div class="action-row">
-            <a href="{% url 'update-project' project.pk %}" class="btn btn-secondary">Edit Project</a>
-            <a href="{% url 'delete-project' project.pk %}" class="btn btn-danger">Delete Project</a>
-        </div>
-
-        <h2>Reviews</h2>
-        <div class="comment-list">
-            {% for review in reviews %}
-    <div class="comment">
-
-        <div class="commenter">
-            ⭐ {{ review.rating }} / 5
-        </div>
-
-        <div class="comment-text">
-            {{ review.review }}
-        </div>
-
     </div>
-{% empty %}
-    <p class="empty">No reviews yet.</p>
-{% endfor %}
+
+    <!-- Rating row -->
+    <div style="
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1rem 1.2rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    ">
+        <div>
+            <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Creator's Rating</p>
+            <p style="font-size: 1.1rem;">{{ project.star_display }}</p>
         </div>
-
-        <div class="action-row">
-            <div class="favorites-count">{{ favorites }} ❤️</div>
+        <div>
+            <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Community Rating</p>
+            <p style="font-size: 1.1rem;">
+                {% if avg_rating %}
+                    ⭐ {{ avg_rating|floatformat:1 }} / 5
+                {% else %}
+                    <span style="color: var(--muted); font-style: italic; font-size: 0.9rem;">No reviews yet</span>
+                {% endif %}
+            </p>
         </div>
-
-        <form method="POST" action="{% url 'favorite-project' project.pk %}" class="favorite-form">
-            {% csrf_token %}
-            <input type="hidden" name="favoriter" value="anonymous">
-            <input type="submit" value="❤️ Add to Favorites">
-        </form>
-
-        <div class="action-row">
-            <a href="{% url 'add-review' project.pk %}" class="btn btn-primary">+ Add Review</a>
-            <a href="{% url 'add-yarn' project.pk %}" class="btn btn-sage">+ Add Yarn</a>
+        <div>
+            <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Date Created</p>
+            <p style="font-size: 0.95rem;">{{ project.date_created|date:"N j, Y" }}</p>
         </div>
-
-        
-
     </div>
+
+    <h2>Yarn Used</h2>
+    <div class="yarn-list">
+        {% for yarn in project.yarn_set.all %}
+            <div class="yarn-chip">
+                <strong>{{ yarn.name }}</strong><br>
+                {{ yarn.brand }} • {{ yarn.color }}
+            </div>
+        {% empty %}
+            <p class="empty">No yarn added yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="action-row">
+        <a href="{% url 'update-project' project.pk %}" class="btn btn-secondary">Edit Project</a>
+        <a href="{% url 'delete-project' project.pk %}" class="btn btn-danger">Delete Project</a>
+    </div>
+
+    <h2>Reviews</h2>
+    <div class="comment-list">
+        {% for review in reviews %}
+            <div class="comment">
+                <div class="commenter">⭐ {{ review.rating }} / 5</div>
+                <div class="comment-text">{{ review.review }}</div>
+            </div>
+        {% empty %}
+            <p class="empty">No reviews yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="action-row" style="margin-top: 1.5rem;">
+        <div class="favorites-count">{{ favorites }} ❤️</div>
+    </div>
+
+    <form method="POST" action="{% url 'favorite-project' project.pk %}" class="favorite-form">
+        {% csrf_token %}
+        <input type="hidden" name="favoriter" value="anonymous">
+        <input type="submit" value="❤️ Add to Favorites">
+    </form>
+
+    <div class="action-row" style="margin-top: 1rem;">
+        <a href="{% url 'add-review' project.pk %}" class="btn btn-primary">+ Add Review</a>
+        <a href="{% url 'add-yarn' project.pk %}" class="btn btn-sage">+ Add Yarn</a>
+    </div>
+
+</div>
 
    
     

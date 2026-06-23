@@ -5,13 +5,16 @@
 {% block content %}
 
 <h1>Search Yarn</h1>
+<p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+    Find projects by yarn name, brand, or color
+</p>
 
 <div class="form-card" style="margin-bottom: 2rem;">
     <form method="GET">
         <label for="q">Search by name, brand, or color</label>
         <input type="text" name="q" id="q" value="{{ query }}" placeholder="e.g. merino, Caron, dusty rose...">
         <div class="form-actions">
-            <input type="submit" value="Search" class="btn btn-primary">
+            <input type="submit" value="Search">
             {% if query %}
                 <a href="{% url 'yarn-search' %}" class="btn btn-secondary">Clear</a>
             {% endif %}
@@ -19,14 +22,133 @@
     </form>
 </div>
 
+<!-- yarn stats -->
+<h2 style="font-size: 1.1rem; margin-bottom: 1rem;">🧶 Yarn Community Stats</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+
+    <div style="
+        flex: 1; min-width: 140px;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.2rem 1.4rem;
+        box-shadow: var(--shadow-sm);
+    ">
+        <p style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem;">Total Yarns</p>
+        <p style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 600; color: var(--brown); margin: 0;">{{ total_yarns }}</p>
+    </div>
+
+    <div style="
+        flex: 1; min-width: 140px;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.2rem 1.4rem;
+        box-shadow: var(--shadow-sm);
+    ">
+        <p style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem;">Unique Brands</p>
+        <p style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 600; color: var(--brown); margin: 0;">{{ total_brands }}</p>
+    </div>
+
+    <div style="
+        flex: 1; min-width: 140px;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.2rem 1.4rem;
+        box-shadow: var(--shadow-sm);
+    ">
+        <p style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem;">Most Used Brand</p>
+        {% if most_used_brand %}
+            <p style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--brown); margin: 0;">{{ most_used_brand.brand }}</p>
+            <p style="font-size: 0.78rem; color: var(--muted); margin: 0.2rem 0 0;">used {{ most_used_brand.count }} time{{ most_used_brand.count|pluralize }}</p>
+        {% else %}
+            <p style="font-size: 1.1rem; color: var(--muted); margin: 0;">—</p>
+        {% endif %}
+    </div>
+
+    <div style="
+        flex: 1; min-width: 140px;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.2rem 1.4rem;
+        box-shadow: var(--shadow-sm);
+    ">
+        <p style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem;">Most Popular Color</p>
+        {% if most_popular_color %}
+            <p style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--brown); margin: 0;">{{ most_popular_color.color }}</p>
+            <p style="font-size: 0.78rem; color: var(--muted); margin: 0.2rem 0 0;">used {{ most_popular_color.count }} time{{ most_popular_color.count|pluralize }}</p>
+        {% else %}
+            <p style="font-size: 1.1rem; color: var(--muted); margin: 0;">—</p>
+        {% endif %}
+    </div>
+
+    <div style="
+        flex: 1; min-width: 140px;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.2rem 1.4rem;
+        box-shadow: var(--shadow-sm);
+    ">
+        <p style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem;">Most Yarn Used</p>
+        {% if most_yarns_project %}
+            <a href="{% url 'project-detail' most_yarns_project.project__pk %}" style="
+                font-family: 'Playfair Display', serif;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--brown);
+                text-decoration: none;
+                display: block;
+                margin: 0;
+            ">{{ most_yarns_project.project__title }}</a>
+            <p style="font-size: 0.78rem; color: var(--muted); margin: 0.2rem 0 0;">{{ most_yarns_project.count }} yarn{{ most_yarns_project.count|pluralize }}</p>
+        {% else %}
+            <p style="font-size: 1.1rem; color: var(--muted); margin: 0;">—</p>
+        {% endif %}
+    </div>
+
+</div>
+
 {% if query %}
-    <h2>Results for "{{ query }}"</h2>
+    <h2 style="margin-bottom: 1rem;">Results for "{{ query }}"</h2>
     {% if yarns %}
         {% for yarn in yarns %}
-            <div class="project-card">
-                <h3><a href="{% url 'project-detail' yarn.project.pk %}">{{ yarn.project.title }}</a></h3>
-                <p>Yarn: {{ yarn.name }} · Brand: {{ yarn.brand }} · Color: {{ yarn.color }}</p>
+        <div class="project-card" style="display: flex; gap: 1.2rem; align-items: flex-start;">
+
+            <div style="
+                width: 90px; height: 90px;
+                flex-shrink: 0;
+                border-radius: var(--radius-sm);
+                overflow: hidden;
+                background: var(--warm);
+                border: 1px solid var(--border);
+            ">
+                {% if yarn.project.image_file %}
+                    <img src="{{ yarn.project.image_file.url }}" alt="{{ yarn.project.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">🧶</div>
+                {% endif %}
             </div>
+
+            <div style="flex: 1;">
+                <a href="{% url 'project-detail' yarn.project.pk %}" style="
+                    font-family: 'Playfair Display', serif;
+                    font-size: 1.15rem;
+                    font-weight: 600;
+                    color: var(--brown);
+                    text-decoration: none;
+                ">{{ yarn.project.title }}</a>
+                <p style="color: var(--muted); font-size: 0.85rem; margin: 0.2rem 0 0.5rem;">by {{ yarn.project.creator }}</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                    <span class="badge" style="background: #fde8d8; color: var(--terracotta);">{{ yarn.name }}</span>
+                    <span class="badge badge-difficulty">{{ yarn.brand }}</span>
+                    <span class="badge badge-status">{{ yarn.color }}</span>
+                </div>
+            </div>
+
+        </div>
         {% endfor %}
     {% else %}
         <p class="empty">No yarn found matching "{{ query }}".</p>

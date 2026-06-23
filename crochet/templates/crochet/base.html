@@ -12,28 +12,23 @@ crochet/base.html
 <html>
 <head>
     <title>{% block title %}Crochet Projects{% endblock %}</title>
-
     <link rel="stylesheet" href="{% static 'styles-for-crochet.css' %}">
 </head>
 
 <body>
 
 <nav>
-    <a href="{% url 'project-list' %}">All Projects</a>
-    
-    <a href="{% url 'create-project' %}">New Project</a>
-    
-    <a href="{% url 'yarn-search' %}">Search Yarn</a>
+    <a class="brand" href="{% url 'project-list' %}">🧶 crochet</a>
 
-    <a href="{% url 'project-search' %}">Search Projects</a>
+    <a href="{% url 'project-list' %}">All Projects</a>
+    <a href="{% url 'create-project' %}">+ New Project</a>
+    <a href="{% url 'yarn-search' %}">Yarn Search</a>
+    <a href="{% url 'project-search' %}">Explore</a>
 </nav>
 
-
 <div class="page">
-
     {% block content %}
     {% endblock %}
-
 </div>
 
 </body>

@@ -3,7 +3,7 @@
 # Description: the views python files that contain the form views for my project
 
 
-
+from django.db.models import Avg, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import View
@@ -18,7 +18,7 @@ class ProjectListView(ListView):
     context_object_name = 'projects'
     
     def get_queryset(self):
-        queryset = Project.objects.all()
+        queryset = Project.objects.annotate(favorite_count=Count('favorite', distinct=True))
 
         category = self.request.GET.get('category', '')
         rating = self.request.GET.get('rating', '')
@@ -26,10 +26,8 @@ class ProjectListView(ListView):
 
         if category:
             queryset = queryset.filter(category__icontains=category)
-
         if rating:
             queryset = queryset.filter(rating=rating)
-
         if difficulty:
             queryset = queryset.filter(difficulty_level=difficulty)
 
@@ -37,19 +35,22 @@ class ProjectListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['selected_category'] = self.request.GET.get('category', '')
         context['selected_rating'] = self.request.GET.get('rating', '')
         context['selected_difficulty'] = self.request.GET.get('difficulty', '')
-
         context['categories'] = Project.objects.exclude(category='').values_list('category', flat=True).distinct()
-
         context['ratings'] = [1,2,3,4,5]
-
         context['difficulties'] = Project.DIFFICULTY_CHOICES
 
-        return context
+        # top 3 most popular
+        context['popular_projects'] = Project.objects.annotate(
+            favorite_count=Count('favorite', distinct=True),
+            avg_rating=Avg('review__rating')
+        ).order_by('-favorite_count', '-avg_rating')[:3]
 
+        return context
+    
+    
 # for the class projectdetailview to show project detail
 class ProjectDetailView(DetailView):
     model = Project
@@ -60,7 +61,8 @@ class ProjectDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['reviews'] = Review.objects.filter(project=self.object)
         context['favorites'] = Favorite.objects.filter(project=self.object).count()
-
+        context['avg_rating'] = Review.objects.filter(project=self.object).aggregate(Avg('rating'))['rating__avg']
+        
         yarns = Yarn.objects.filter(project=self.object)
         context['yarns'] = yarns
 
@@ -179,6 +181,14 @@ class SearchYarnView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
+
+        # yarn statistics
+        context['total_yarns'] = Yarn.objects.count()
+        context['total_brands'] = Yarn.objects.values('brand').distinct().count()
+        context['most_used_brand'] = Yarn.objects.values('brand').annotate(count=Count('brand')).order_by('-count').first()
+        context['most_popular_color'] = Yarn.objects.values('color').annotate(count=Count('color')).order_by('-count').first()
+        context['most_yarns_project'] = Yarn.objects.values('project__title', 'project__pk').annotate(count=Count('id')).order_by('-count').first()
+
         return context
 
 
@@ -189,7 +199,7 @@ class SearchProjectView(ListView):
     context_object_name = 'projects'
 
     def get_queryset(self):
-        queryset = Project.objects.all()
+        queryset = Project.objects.annotate(avg_rating=Avg('review__rating'))
 
         query = self.request.GET.get('q', '')
         rating = self.request.GET.get('rating', '')
@@ -202,13 +212,10 @@ class SearchProjectView(ListView):
                 Q(description__icontains=query) |
                 Q(category__icontains=query)
             )
-
         if rating:
-            queryset = queryset.filter(rating=rating)
-
+            queryset = queryset.filter(avg_rating=rating)
         if difficulty:
             queryset = queryset.filter(difficulty_level=difficulty)
-
         if status:
             queryset = queryset.filter(project_status=status)
 
@@ -216,10 +223,9 @@ class SearchProjectView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['query'] = self.request.GET.get('q', '')
-        context['ratings'] = [1,2,3,4,5]
+        context['selected_rating'] = self.request.GET.get('rating', '')
+        context['ratings'] = [1, 2, 3, 4, 5]
         context['difficulties'] = Project.DIFFICULTY_CHOICES
         context['statuses'] = Project.STATUS_CHOICES
-
         return context
