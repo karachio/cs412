@@ -19,15 +19,35 @@ class ProjectListView(ListView):
     
     def get_queryset(self):
         queryset = Project.objects.all()
+
         category = self.request.GET.get('category', '')
+        rating = self.request.GET.get('rating', '')
+        difficulty = self.request.GET.get('difficulty', '')
+
         if category:
             queryset = queryset.filter(category__icontains=category)
+
+        if rating:
+            queryset = queryset.filter(rating=rating)
+
+        if difficulty:
+            queryset = queryset.filter(difficulty_level=difficulty)
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context['selected_category'] = self.request.GET.get('category', '')
+        context['selected_rating'] = self.request.GET.get('rating', '')
+        context['selected_difficulty'] = self.request.GET.get('difficulty', '')
+
         context['categories'] = Project.objects.exclude(category='').values_list('category', flat=True).distinct()
+
+        context['ratings'] = [1,2,3,4,5]
+
+        context['difficulties'] = Project.DIFFICULTY_CHOICES
+
         return context
 
 # for the class projectdetailview to show project detail
@@ -159,4 +179,47 @@ class SearchYarnView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
+        return context
+
+
+# for the class searchprojectview, to search for projects inspo
+class SearchProjectView(ListView):
+    model = Project
+    template_name = 'crochet/project_search.html'
+    context_object_name = 'projects'
+
+    def get_queryset(self):
+        queryset = Project.objects.all()
+
+        query = self.request.GET.get('q', '')
+        rating = self.request.GET.get('rating', '')
+        difficulty = self.request.GET.get('difficulty', '')
+        status = self.request.GET.get('status', '')
+
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(category__icontains=query)
+            )
+
+        if rating:
+            queryset = queryset.filter(rating=rating)
+
+        if difficulty:
+            queryset = queryset.filter(difficulty_level=difficulty)
+
+        if status:
+            queryset = queryset.filter(project_status=status)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['query'] = self.request.GET.get('q', '')
+        context['ratings'] = [1,2,3,4,5]
+        context['difficulties'] = Project.DIFFICULTY_CHOICES
+        context['statuses'] = Project.STATUS_CHOICES
+
         return context

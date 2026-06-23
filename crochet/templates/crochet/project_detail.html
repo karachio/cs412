@@ -31,8 +31,9 @@ crochet/project_detail.html
         {% endif %}
 
         <p>{{ project.description }}</p>
-        <p>Difficulty: {{ project.difficulty_level }}</p>
-        <p>Status: {{ project.project_status }}</p>
+        <p>Difficulty: {{ project.get_difficulty_level_display }}</p>
+        <p>Status: {{ project.get_project_status_display }}</p>
+        <p>Rating: {{ project.star_display }}</p>
         <p>Created: {{ project.date_created }}</p>
 
         <h2>Yarn Used</h2>

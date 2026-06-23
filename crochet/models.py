@@ -15,18 +15,42 @@ class Project(models.Model):
     title = models.TextField(blank=False)
     creator = models.TextField(blank=False)
     description = models.TextField(blank=False)
-    difficulty_level = models.TextField(blank=False)
+    DIFFICULTY_CHOICES = [
+        ('easy', 'Easy'),
+        ('medium', 'Medium'),
+        ('hard', 'Hard'),
+    ]
+
+    difficulty_level = models.CharField(max_length=10,choices=DIFFICULTY_CHOICES,default='easy')
     # image_url = models.URLField(blank=True) ## new
     image_file = models.ImageField(blank=True) # so the user can upload an image of their progress
-    project_status = models.TextField(blank=False)
+    STATUS_CHOICES = [
+    ('not_started', 'Not Started'),
+    ('in_progress', 'In Progress'),
+    ('completed', 'Completed'),
+]
+    project_status = models.CharField(max_length=20,choices=STATUS_CHOICES,default='not_started')
     category = models.TextField(blank=True, default='')
     date_created = models.DateTimeField(auto_now=True)
+    RATING_CHOICES = [
+    (1, '1 Star'),
+    (2, '2 Stars'),
+    (3, '3 Stars'),
+    (4, '4 Stars'),
+    (5, '5 Stars'),
+    ]
+    rating = models.IntegerField(choices=RATING_CHOICES,default=5)
     
     
     def __str__(self):
         '''Return a string representation of this Project object.'''
         return f'{self.title} by {self.creator}'
     
+    def star_display(self):
+        filled = "⭐" * self.rating
+        empty = "☆" * (5 - self.rating)
+        return filled + empty
+        
     
 class Comment(models.Model):
     '''Encapsulate the idea of an Comment by some commentor.'''

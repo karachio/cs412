@@ -1,0 +1,68 @@
+{% extends 'crochet/base.html' %}
+
+{% block title %}Search Projects{% endblock %}
+
+{% block content %}
+
+<h1>Search Projects</h1>
+
+<div class="form-card" style="margin-bottom: 2rem;">
+    <form method="GET">
+
+        <label>Search</label>
+        <input type="text" name="q" value="{{ query }}" placeholder="title, description, category...">
+
+        <label>Rating</label>
+        <select name="rating">
+            <option value="">Any</option>
+            {% for r in ratings %}
+                <option value="{{ r }}">{{ r }} Stars</option>
+            {% endfor %}
+        </select>
+
+        <label>Difficulty</label>
+        <select name="difficulty">
+            <option value="">Any</option>
+            {% for value, label in difficulties %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Status</label>
+        <select name="status">
+            <option value="">Any</option>
+            {% for value, label in statuses %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="form-actions">
+            <input type="submit" value="Search" class="btn btn-primary">
+            <a href="{% url 'project-search' %}" class="btn btn-secondary">Clear</a>
+        </div>
+    </form>
+</div>
+
+{% if projects %}
+    {% for project in projects %}
+        <div class="project-card">
+            <h3>
+                <a href="{% url 'project-detail' project.pk %}">
+                    {{ project.title }}
+                </a>
+            </h3>
+
+            <p>{{ project.description }}</p>
+
+            <p>
+                {{ project.star_display }}·
+                Difficulty: {{ project.get_difficulty_level_display }} ·
+                Status: {{ project.get_project_status_display }}
+            </p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="empty">No projects found.</p>
+{% endif %}
+
+{% endblock %}
