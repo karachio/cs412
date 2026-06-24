@@ -1,0 +1,32 @@
+<!--
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/delete_yarn.html
+    confirm deletion of yarn
+-->
+
+{% extends 'crochet/base.html' %}
+
+{% block title %}Delete Yarn{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'project-detail' project.pk %}" class="btn btn-secondary">
+    ← Back to {{ project.title }}
+</a>
+<br><br>
+
+<h2>Delete "{{ object.name }}"?</h2>
+<p style="color: var(--muted);">{{ object.brand }} • {{ object.color }}</p>
+
+<div class="delete-card">
+    <p>This cannot be undone.</p>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Yes, delete">
+    </form>
+</div>
+
+{% endblock %}

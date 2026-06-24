@@ -85,6 +85,9 @@ class ProjectDetailView(DetailView):
             })
 
         context['similar_projects'] = similar_projects
+        context['other_by_creator'] = Project.objects.filter(
+            creator=self.object.creator
+        ).exclude(pk=self.object.pk)[:3]
         return context
 
 # for the class createprojectview to create projects
@@ -246,6 +249,19 @@ class UpdateYarnView(UpdateView):
     model = Yarn
     template_name = 'crochet/update_yarn.html'
     fields = ['name', 'brand', 'color']
+
+    def get_success_url(self):
+        return reverse('project-detail', kwargs={'pk': self.object.project.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['project'] = self.object.project
+        return context
+    
+    
+class DeleteYarnView(DeleteView):
+    model = Yarn
+    template_name = 'crochet/delete_yarn.html'
 
     def get_success_url(self):
         return reverse('project-detail', kwargs={'pk': self.object.project.pk})

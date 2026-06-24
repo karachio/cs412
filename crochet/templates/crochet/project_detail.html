@@ -53,7 +53,7 @@ crochet/project_detail.html
                         display: flex; align-items: center; justify-content: center;
                         font-size: 0.8rem; font-weight: 700;
                         {% if project.project_status == 'not_started' %}
-                            background: var(--brown); color: var(--cream);
+                            background: #c0392b; color: #fff;
                         {% elif project.project_status == 'in_progress' or project.project_status == 'completed' %}
                             background: var(--sage); color: #fff;
                         {% else %}
@@ -61,12 +61,12 @@ crochet/project_detail.html
                         {% endif %}
                     ">✓</div>
                     <p style="font-size: 0.72rem; color:
-                        {% if project.project_status == 'not_started' %}var(--brown)
+                        {% if project.project_status == 'not_started' %}var(--terracotta)
                         {% else %}var(--sage){% endif %};
                         font-weight: 600; margin: 0; white-space: nowrap;">Not Started</p>
                 </div>
 
-                <!-- line -->
+                
                 <div style="
                     flex: 1; height: 3px; margin-bottom: 1.2rem;
                     background: {% if project.project_status == 'in_progress' or project.project_status == 'completed' %}var(--sage){% else %}var(--border){% endif %};
@@ -80,7 +80,7 @@ crochet/project_detail.html
                         display: flex; align-items: center; justify-content: center;
                         font-size: 0.8rem; font-weight: 700;
                         {% if project.project_status == 'in_progress' %}
-                            background: var(--brown); color: var(--cream);
+                            background: #e6a817; color: #fff;
                         {% elif project.project_status == 'completed' %}
                             background: var(--sage); color: #fff;
                         {% else %}
@@ -94,7 +94,7 @@ crochet/project_detail.html
                         font-weight: 600; margin: 0; white-space: nowrap;">In Progress</p>
                 </div>
 
-                <!-- line -->
+                
                 <div style="
                     flex: 1; height: 3px; margin-bottom: 1.2rem;
                     background: {% if project.project_status == 'completed' %}var(--sage){% else %}var(--border){% endif %};
@@ -176,6 +176,8 @@ crochet/project_detail.html
                     <strong>{{ yarn.name }}</strong><br>
                     {{ yarn.brand }} • {{ yarn.color }}<br>
                     <a href="{% url 'update-yarn' yarn.pk %}" style="font-size: 0.75rem; color: var(--terracotta);">edit</a>
+                    ·
+                    <a href="{% url 'delete-yarn' yarn.pk %}" style="font-size: 0.75rem; color: #c0392b;">delete</a>
                 </div>
             {% empty %}
                 <p class="empty">No yarn added yet.</p>
@@ -216,45 +218,96 @@ crochet/project_detail.html
 
     </div>
 
-    {% if similar_projects %}
-    <div style="
-        width: 260px;
-        flex-shrink: 0;
-        background: var(--warm-white);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 1.2rem 1.4rem;
-        position: sticky;
-        top: 80px;
-        align-self: flex-start;
-    ">
-        <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">🧶 Similar Projects</h3>
-        {% for item in similar_projects %}
-            <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
-                <a href="{% url 'project-detail' item.project.pk %}" style="
-                    font-weight: 700;
-                    color: var(--brown);
-                    font-size: 1rem;
-                    display: block;
-                    margin-bottom: 0.2rem;
-                ">{{ item.project.title }}</a>
-                <p style="font-size: 0.85rem; color: var(--muted); margin: 0 0 0.4rem;">by {{ item.project.creator }}</p>
-                {% for yarn in item.matching_yarn %}
-                    <span style="
-                        display: inline-block;
-                        margin-top: 0.2rem;
-                        padding: 2px 8px;
-                        background: var(--sage-light);
-                        color: #2e5c3e;
-                        border-radius: 20px;
-                        font-size: 0.75rem;
-                        font-weight: 600;
-                    ">{{ yarn.brand }} · {{ yarn.color }}</span>
-                {% endfor %}
-            </div>
-        {% endfor %}
+    <!-- RIGHT: sidebar cards -->
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-self: flex-start; position: sticky; top: 80px; width: 260px;">
+
+        {% if similar_projects %}
+        <div style="
+            background: var(--warm-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.4rem;
+        ">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">🧶 Similar Projects</h3>
+            {% for item in similar_projects %}
+                <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                    <a href="{% url 'project-detail' item.project.pk %}" style="
+                        font-weight: 700;
+                        color: var(--brown);
+                        font-size: 1rem;
+                        display: block;
+                        margin-bottom: 0.2rem;
+                    ">{{ item.project.title }}</a>
+                    <p style="font-size: 0.85rem; color: var(--muted); margin: 0 0 0.4rem;">by {{ item.project.creator }}</p>
+                    {% for yarn in item.matching_yarn %}
+                        <span style="
+                            display: inline-block;
+                            margin-top: 0.2rem;
+                            padding: 2px 8px;
+                            background: var(--sage-light);
+                            color: #2e5c3e;
+                            border-radius: 20px;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                        ">{{ yarn.brand }} · {{ yarn.color }}</span>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if other_by_creator %}
+        <div style="
+            background: var(--warm-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.4rem;
+        ">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;"> More by {{ project.creator }}</h3>
+            {% for p in other_by_creator %}
+                <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                    <a href="{% url 'project-detail' p.pk %}" style="
+                        font-weight: 700;
+                        color: var(--brown);
+                        font-size: 1rem;
+                        display: block;
+                        margin-bottom: 0.2rem;
+                    ">{{ p.title }}</a>
+                    <p style="font-size: 0.85rem; color: var(--muted); margin: 0 0 0.4rem;">
+                        <span style="
+                            display: inline-block;
+                            padding: 2px 10px;
+                            border-radius: 20px;
+                            font-size: 0.7rem;
+                            font-weight: 700;
+                            {% if p.project_status == 'not_started' %}
+                                background: #fde8e8; color: #c0392b;
+                            {% elif p.project_status == 'in_progress' %}
+                                background: #fef6e0; color: #e6a817;
+                            {% elif p.project_status == 'completed' %}
+                                background: var(--sage-light); color: #2e5c3e;
+                            {% endif %}
+                        ">{{ p.get_project_status_display }}</span>
+                    </p>
+                    </p>
+                    {% for yarn in p.yarn_set.all %}
+                        <span style="
+                            display: inline-block;
+                            margin-top: 0.2rem;
+                            padding: 2px 8px;
+                            background: var(--sage-light);
+                            color: #2e5c3e;
+                            border-radius: 20px;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                        ">{{ yarn.brand }} · {{ yarn.color }}</span>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
     </div>
-    {% endif %}
 
 </div>
 

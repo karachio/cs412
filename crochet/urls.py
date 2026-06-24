@@ -19,4 +19,5 @@ urlpatterns = [
     path('project/search/', views.SearchProjectView.as_view(), name='project-search'),
     path('project/<int:pk>/advance/', views.AdvanceStatusView.as_view(), name='advance-status'),
     path('yarn/<int:pk>/update/', views.UpdateYarnView.as_view(), name='update-yarn'),
+    path('yarn/<int:pk>/delete/', views.DeleteYarnView.as_view(), name='delete-yarn'),
 ]
