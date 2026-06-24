@@ -1,3 +1,13 @@
+<!--
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/project_search.html
+    searches projects
+-->
+
+
 {% extends 'crochet/base.html' %}
 
 {% block title %}Search Projects{% endblock %}
@@ -52,7 +62,7 @@
     {% for project in projects %}
     <div class="project-card" style="display: flex; gap: 1.2rem; align-items: flex-start;">
 
-        <!-- thumbnail -->
+        
         <div style="
             width: 90px;
             height: 90px;
@@ -80,7 +90,7 @@
             {% endif %}
         </div>
 
-        <!-- content -->
+        
         <div style="flex: 1;">
             <a href="{% url 'project-detail' project.pk %}" style="
                 font-family: 'Playfair Display', serif;

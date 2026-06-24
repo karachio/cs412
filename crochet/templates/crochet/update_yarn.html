@@ -1,0 +1,37 @@
+<!--
+Karachi Onwuanibe
+karachio@bu.edu
+
+description:
+crochet/update_yarn.html
+    form to update yarn on a project
+-->
+
+{% extends 'crochet/base.html' %}
+
+{% block title %}Edit Yarn{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'project-detail' project.pk %}" class="btn btn-secondary">
+    ← Back to {{ project.title }}
+</a>
+<br><br>
+
+<h2>Edit Yarn</h2>
+<p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem;">for {{ project.title }}</p>
+
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <div class="form-actions">
+            <input type="submit" value="Save Changes">
+            <a href="{% url 'project-detail' project.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

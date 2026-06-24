@@ -229,3 +229,28 @@ class SearchProjectView(ListView):
         context['difficulties'] = Project.DIFFICULTY_CHOICES
         context['statuses'] = Project.STATUS_CHOICES
         return context
+    
+# for the class advancestatusview, to show progress tracker
+class AdvanceStatusView(View):
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        next_status = project.get_next_status()
+        if next_status:
+            project.project_status = next_status
+            project.save()
+        return redirect(reverse('project-detail', kwargs={'pk': pk}))
+    
+    
+# for the class updateyarnview, to update yarn
+class UpdateYarnView(UpdateView):
+    model = Yarn
+    template_name = 'crochet/update_yarn.html'
+    fields = ['name', 'brand', 'color']
+
+    def get_success_url(self):
+        return reverse('project-detail', kwargs={'pk': self.object.project.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['project'] = self.object.project
+        return context

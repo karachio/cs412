@@ -51,6 +51,12 @@ class Project(models.Model):
         empty = "☆" * (5 - self.rating)
         return filled + empty
         
+    def get_next_status(self):
+        order = ['not_started', 'in_progress', 'completed']
+        current_index = order.index(self.project_status)
+        if current_index < len(order) - 1:
+            return order[current_index + 1]
+        return None
     
 class Review(models.Model):
     '''Encapsulate the idea of an Project by some creator.'''

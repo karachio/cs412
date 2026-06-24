@@ -15,150 +15,246 @@ crochet/project_detail.html
 
 <div style="display: flex; gap: 2rem; align-items: flex-start;">
 
-
     <div style="flex: 1;">
 
-    <a href="{% url 'project-list' %}" class="btn btn-secondary">← Back to all projects</a>
-    <br><br>
+        <a href="{% url 'project-list' %}" class="btn btn-secondary">← Back to all projects</a>
+        <br><br>
 
-    <h1>{{ project.title }}</h1>
-    <p style="color: var(--muted); font-size: 1rem; margin-bottom: 1.5rem;">by {{ project.creator }}</p>
+        <h1>{{ project.title }}</h1>
+        <p style="color: var(--muted); font-size: 1rem; margin-bottom: 1.5rem;">by {{ project.creator }}</p>
 
-    {% if project.image_file %}
-    <div class="image-frame">
-        <img src="{{ project.image_file.url }}" alt="{{ project.title }}" class="project-image">
-    </div>
-    {% endif %}
-
-    <p style="font-size: 1rem; margin-bottom: 1.5rem;">{{ project.description }}</p>
-
-    <!-- Info badges row -->
-    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem;">
-        <span class="badge badge-difficulty">{{ project.get_difficulty_level_display }}</span>
-        <span class="badge badge-status">{{ project.get_project_status_display }}</span>
-        {% if project.category %}
-            <span class="badge" style="background: #fde8d8; color: var(--terracotta);">{{ project.category }}</span>
+        {% if project.image_file %}
+        <div class="image-frame">
+            <img src="{{ project.image_file.url }}" alt="{{ project.title }}" class="project-image">
+        </div>
         {% endif %}
+
+        <p style="font-size: 1rem; margin-bottom: 1.5rem;">{{ project.description }}</p>
+
+        <!-- info badges row -->
+        <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem;">
+            <span class="badge badge-difficulty">{{ project.get_difficulty_level_display }}</span>
+            {% if project.category %}
+                <span class="badge" style="background: #fde8d8; color: var(--terracotta);">{{ project.category }}</span>
+            {% endif %}
+        </div>
+
+        <!-- progress tracker -->
+        <div style="margin: 1.5rem 0;">
+            <p style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem;">Project Progress</p>
+
+            <div style="display: flex; align-items: center; gap: 0;">
+
+                <!-- Not Started -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
+                    <div style="
+                        width: 36px; height: 36px;
+                        border-radius: 50%;
+                        display: flex; align-items: center; justify-content: center;
+                        font-size: 0.8rem; font-weight: 700;
+                        {% if project.project_status == 'not_started' %}
+                            background: var(--brown); color: var(--cream);
+                        {% elif project.project_status == 'in_progress' or project.project_status == 'completed' %}
+                            background: var(--sage); color: #fff;
+                        {% else %}
+                            background: var(--border); color: var(--muted);
+                        {% endif %}
+                    ">✓</div>
+                    <p style="font-size: 0.72rem; color:
+                        {% if project.project_status == 'not_started' %}var(--brown)
+                        {% else %}var(--sage){% endif %};
+                        font-weight: 600; margin: 0; white-space: nowrap;">Not Started</p>
+                </div>
+
+                <!-- line -->
+                <div style="
+                    flex: 1; height: 3px; margin-bottom: 1.2rem;
+                    background: {% if project.project_status == 'in_progress' or project.project_status == 'completed' %}var(--sage){% else %}var(--border){% endif %};
+                "></div>
+
+                <!-- In Progress -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
+                    <div style="
+                        width: 36px; height: 36px;
+                        border-radius: 50%;
+                        display: flex; align-items: center; justify-content: center;
+                        font-size: 0.8rem; font-weight: 700;
+                        {% if project.project_status == 'in_progress' %}
+                            background: var(--brown); color: var(--cream);
+                        {% elif project.project_status == 'completed' %}
+                            background: var(--sage); color: #fff;
+                        {% else %}
+                            background: var(--border); color: var(--muted);
+                        {% endif %}
+                    ">✓</div>
+                    <p style="font-size: 0.72rem; color:
+                        {% if project.project_status == 'in_progress' %}var(--brown)
+                        {% elif project.project_status == 'completed' %}var(--sage)
+                        {% else %}var(--muted){% endif %};
+                        font-weight: 600; margin: 0; white-space: nowrap;">In Progress</p>
+                </div>
+
+                <!-- line -->
+                <div style="
+                    flex: 1; height: 3px; margin-bottom: 1.2rem;
+                    background: {% if project.project_status == 'completed' %}var(--sage){% else %}var(--border){% endif %};
+                "></div>
+
+                <!-- Completed -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
+                    <div style="
+                        width: 36px; height: 36px;
+                        border-radius: 50%;
+                        display: flex; align-items: center; justify-content: center;
+                        font-size: 0.8rem; font-weight: 700;
+                        {% if project.project_status == 'completed' %}
+                            background: var(--sage); color: #fff;
+                        {% else %}
+                            background: var(--border); color: var(--muted);
+                        {% endif %}
+                    ">✓</div>
+                    <p style="font-size: 0.72rem; color:
+                        {% if project.project_status == 'completed' %}var(--sage)
+                        {% else %}var(--muted){% endif %};
+                        font-weight: 600; margin: 0; white-space: nowrap;">Completed</p>
+                </div>
+
+            </div>
+
+            
+            {% if project.get_next_status %}
+            <form method="POST" action="{% url 'advance-status' project.pk %}" style="margin-top: 1rem;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sage" style="font-size: 0.85rem;">
+                    {% if project.project_status == 'not_started' %}
+                        Mark as In Progress →
+                    {% elif project.project_status == 'in_progress' %}
+                        Mark as Completed →
+                    {% endif %}
+                </button>
+            </form>
+            {% else %}
+                <p style="font-size: 0.82rem; color: var(--sage); margin-top: 0.8rem; font-weight: 600;">🎉 Project complete!</p>
+            {% endif %}
+        </div>
+
+        <!-- Rating -->
+        <div style="
+            background: var(--warm-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        ">
+            <div>
+                <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Creator's Rating</p>
+                <p style="font-size: 1.1rem;">{{ project.star_display }}</p>
+            </div>
+            <div>
+                <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Community Rating</p>
+                <p style="font-size: 1.1rem;">
+                    {% if avg_rating %}
+                        ⭐ {{ avg_rating|floatformat:1 }} / 5
+                    {% else %}
+                        <span style="color: var(--muted); font-style: italic; font-size: 0.9rem;">No reviews yet</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Date Created</p>
+                <p style="font-size: 0.95rem;">{{ project.date_created|date:"N j, Y" }}</p>
+            </div>
+        </div>
+
+        <h2>Yarn Used</h2>
+        <div class="yarn-list">
+            {% for yarn in project.yarn_set.all %}
+                <div class="yarn-chip">
+                    <strong>{{ yarn.name }}</strong><br>
+                    {{ yarn.brand }} • {{ yarn.color }}<br>
+                    <a href="{% url 'update-yarn' yarn.pk %}" style="font-size: 0.75rem; color: var(--terracotta);">edit</a>
+                </div>
+            {% empty %}
+                <p class="empty">No yarn added yet.</p>
+            {% endfor %}
+        </div>
+
+        <div class="action-row">
+            <a href="{% url 'update-project' project.pk %}" class="btn btn-secondary">Edit Project</a>
+            <a href="{% url 'delete-project' project.pk %}" class="btn btn-danger">Delete Project</a>
+        </div>
+
+        <h2>Reviews</h2>
+        <div class="comment-list">
+            {% for review in reviews %}
+                <div class="comment">
+                    <div class="commenter">⭐ {{ review.rating }} / 5</div>
+                    <div class="comment-text">{{ review.review }}</div>
+                </div>
+            {% empty %}
+                <p class="empty">No reviews yet.</p>
+            {% endfor %}
+        </div>
+
+        <div class="action-row" style="margin-top: 1.5rem;">
+            <div class="favorites-count">{{ favorites }} ❤️</div>
+        </div>
+
+        <form method="POST" action="{% url 'favorite-project' project.pk %}" class="favorite-form">
+            {% csrf_token %}
+            <input type="hidden" name="favoriter" value="anonymous">
+            <input type="submit" value="❤️ Add to Favorites">
+        </form>
+
+        <div class="action-row" style="margin-top: 1rem;">
+            <a href="{% url 'add-review' project.pk %}" class="btn btn-primary">+ Add Review</a>
+            <a href="{% url 'add-yarn' project.pk %}" class="btn btn-sage">+ Add Yarn</a>
+        </div>
+
     </div>
 
-    <!-- Rating row -->
+    {% if similar_projects %}
     <div style="
+        width: 260px;
+        flex-shrink: 0;
         background: var(--warm-white);
         border: 1px solid var(--border);
         border-radius: var(--radius);
-        padding: 1rem 1.2rem;
-        margin-bottom: 1.5rem;
-        display: flex;
-        gap: 2rem;
-        flex-wrap: wrap;
+        padding: 1.2rem 1.4rem;
+        position: sticky;
+        top: 80px;
+        align-self: flex-start;
     ">
-        <div>
-            <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Creator's Rating</p>
-            <p style="font-size: 1.1rem;">{{ project.star_display }}</p>
-        </div>
-        <div>
-            <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Community Rating</p>
-            <p style="font-size: 1.1rem;">
-                {% if avg_rating %}
-                    ⭐ {{ avg_rating|floatformat:1 }} / 5
-                {% else %}
-                    <span style="color: var(--muted); font-style: italic; font-size: 0.9rem;">No reviews yet</span>
-                {% endif %}
-            </p>
-        </div>
-        <div>
-            <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem;">Date Created</p>
-            <p style="font-size: 0.95rem;">{{ project.date_created|date:"N j, Y" }}</p>
-        </div>
-    </div>
-
-    <h2>Yarn Used</h2>
-    <div class="yarn-list">
-        {% for yarn in project.yarn_set.all %}
-            <div class="yarn-chip">
-                <strong>{{ yarn.name }}</strong><br>
-                {{ yarn.brand }} • {{ yarn.color }}
+        <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">🧶 Similar Projects</h3>
+        {% for item in similar_projects %}
+            <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                <a href="{% url 'project-detail' item.project.pk %}" style="
+                    font-weight: 700;
+                    color: var(--brown);
+                    font-size: 1rem;
+                    display: block;
+                    margin-bottom: 0.2rem;
+                ">{{ item.project.title }}</a>
+                <p style="font-size: 0.85rem; color: var(--muted); margin: 0 0 0.4rem;">by {{ item.project.creator }}</p>
+                {% for yarn in item.matching_yarn %}
+                    <span style="
+                        display: inline-block;
+                        margin-top: 0.2rem;
+                        padding: 2px 8px;
+                        background: var(--sage-light);
+                        color: #2e5c3e;
+                        border-radius: 20px;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                    ">{{ yarn.brand }} · {{ yarn.color }}</span>
+                {% endfor %}
             </div>
-        {% empty %}
-            <p class="empty">No yarn added yet.</p>
         {% endfor %}
     </div>
-
-    <div class="action-row">
-        <a href="{% url 'update-project' project.pk %}" class="btn btn-secondary">Edit Project</a>
-        <a href="{% url 'delete-project' project.pk %}" class="btn btn-danger">Delete Project</a>
-    </div>
-
-    <h2>Reviews</h2>
-    <div class="comment-list">
-        {% for review in reviews %}
-            <div class="comment">
-                <div class="commenter">⭐ {{ review.rating }} / 5</div>
-                <div class="comment-text">{{ review.review }}</div>
-            </div>
-        {% empty %}
-            <p class="empty">No reviews yet.</p>
-        {% endfor %}
-    </div>
-
-    <div class="action-row" style="margin-top: 1.5rem;">
-        <div class="favorites-count">{{ favorites }} ❤️</div>
-    </div>
-
-    <form method="POST" action="{% url 'favorite-project' project.pk %}" class="favorite-form">
-        {% csrf_token %}
-        <input type="hidden" name="favoriter" value="anonymous">
-        <input type="submit" value="❤️ Add to Favorites">
-    </form>
-
-    <div class="action-row" style="margin-top: 1rem;">
-        <a href="{% url 'add-review' project.pk %}" class="btn btn-primary">+ Add Review</a>
-        <a href="{% url 'add-yarn' project.pk %}" class="btn btn-sage">+ Add Yarn</a>
-    </div>
-
-</div>
-
-   
-    
-{% if similar_projects %}
-<div style="
-    width: 260px;
-    flex-shrink: 0;
-    background: var(--warm-white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.2rem 1.4rem;
-    position: sticky;
-    top: 80px;
-    align-self: flex-start;
-">
-    <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">🧶 Similar Projects</h3>
-    {% for item in similar_projects %}
-        <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
-            <a href="{% url 'project-detail' item.project.pk %}" style="
-                font-weight: 700;
-                color: var(--brown);
-                font-size: 1rem;
-                display: block;
-                margin-bottom: 0.2rem;
-            ">{{ item.project.title }}</a>
-            <p style="font-size: 0.85rem; color: var(--muted); margin: 0 0 0.4rem;">by {{ item.project.creator }}</p>
-            {% for yarn in item.matching_yarn %}
-                <span style="
-                    display: inline-block;
-                    margin-top: 0.2rem;
-                    padding: 2px 8px;
-                    background: var(--sage-light);
-                    color: #2e5c3e;
-                    border-radius: 20px;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                ">{{ yarn.brand }} · {{ yarn.color }}</span>
-            {% endfor %}
-        </div>
-    {% endfor %}
-</div>
-{% endif %}
+    {% endif %}
 
 </div>
 

@@ -94,7 +94,7 @@ crochet/project_list.html
 {% for project in projects %}
 <div class="project-card" style="display: flex; gap: 1.2rem; align-items: flex-start;">
 
-    <!-- thumbnail -->
+    
     <div style="
         width: 90px;
         height: 90px;
@@ -122,7 +122,7 @@ crochet/project_list.html
         {% endif %}
     </div>
 
-    <!-- content -->
+    
     <div style="flex: 1;">
         <a href="{% url 'project-detail' project.pk %}" style="
             font-family: 'Playfair Display', serif;
