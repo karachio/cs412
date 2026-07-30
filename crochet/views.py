@@ -10,6 +10,7 @@ from django.views import View
 from django.urls import reverse, reverse_lazy
 from .models import Project, Review, Yarn, Favorite
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # for the class projectlistview to show list of projects
 class ProjectListView(ListView):
@@ -91,7 +92,7 @@ class ProjectDetailView(DetailView):
         return context
 
 # for the class createprojectview to create projects
-class CreateProjectView(CreateView):
+class CreateProjectView(LoginRequiredMixin, CreateView):
     model = Project
     template_name = 'crochet/create_project.html'
     fields = ['title', 'creator', 'description', 'difficulty_level', 'image_file', 'project_status', 'category']
@@ -101,7 +102,7 @@ class CreateProjectView(CreateView):
 
 
 # for the class createreviewview to create reviews
-class CreateReviewView(CreateView):
+class CreateReviewView(LoginRequiredMixin, CreateView):
     model = Review
     template_name = 'crochet/create_review.html'
     fields = ['rating', 'review']
@@ -120,7 +121,7 @@ class CreateReviewView(CreateView):
 
 
 # for the class addyarnview to add a yarn
-class AddYarnView(CreateView):
+class AddYarnView(LoginRequiredMixin, CreateView):
     model = Yarn
     template_name = 'crochet/add_yarn.html'
     fields = ['name', 'brand', 'color']
@@ -139,7 +140,7 @@ class AddYarnView(CreateView):
 
 
 # for the class favoriteprojectview, to favorite a project
-class FavoriteProjectView(View):
+class FavoriteProjectView(LoginRequiredMixin, View):
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
         Favorite.objects.create(project=project, favoriter='anonymous')
@@ -147,7 +148,7 @@ class FavoriteProjectView(View):
     
 
 # for the class updateprojectbiew, to update a project
-class UpdateProjectView(UpdateView):
+class UpdateProjectView(LoginRequiredMixin, UpdateView):
     model = Project
     template_name = 'crochet/update_project.html'
     fields = ['title', 'creator', 'description', 'difficulty_level', 'image_file', 'project_status', 'category']
@@ -157,7 +158,7 @@ class UpdateProjectView(UpdateView):
 
 
 # for the class deleteprojectview, to delete a project
-class DeleteProjectView(DeleteView):
+class DeleteProjectView(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'crochet/delete_project.html'
     success_url = reverse_lazy('project-list')
@@ -234,7 +235,7 @@ class SearchProjectView(ListView):
         return context
     
 # for the class advancestatusview, to show progress tracker
-class AdvanceStatusView(View):
+class AdvanceStatusView(LoginRequiredMixin, View):
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
         next_status = project.get_next_status()
@@ -245,7 +246,7 @@ class AdvanceStatusView(View):
     
     
 # for the class updateyarnview, to update yarn
-class UpdateYarnView(UpdateView):
+class UpdateYarnView(LoginRequiredMixin, UpdateView):
     model = Yarn
     template_name = 'crochet/update_yarn.html'
     fields = ['name', 'brand', 'color']
@@ -259,7 +260,7 @@ class UpdateYarnView(UpdateView):
         return context
     
     
-class DeleteYarnView(DeleteView):
+class DeleteYarnView(LoginRequiredMixin, DeleteView):
     model = Yarn
     template_name = 'crochet/delete_yarn.html'
 

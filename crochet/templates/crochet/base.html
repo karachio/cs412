@@ -21,7 +21,9 @@ crochet/base.html
     <a class="brand" href="{% url 'project-list' %}">🧶 crochet</a>
 
     <a href="{% url 'project-list' %}">All Projects</a>
-    <a href="{% url 'create-project' %}">+ New Project</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'create-project' %}">+ New Project</a>
+    {% endif %}
     <a href="{% url 'yarn-search' %}">Yarn Search</a>
     <a href="{% url 'project-search' %}">Explore</a>
 </nav>

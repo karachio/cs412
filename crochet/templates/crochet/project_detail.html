@@ -175,20 +175,22 @@ crochet/project_detail.html
                 <div class="yarn-chip">
                     <strong>{{ yarn.name }}</strong><br>
                     {{ yarn.brand }} • {{ yarn.color }}<br>
-                    <a href="{% url 'update-yarn' yarn.pk %}" style="font-size: 0.75rem; color: var(--terracotta);">edit</a>
-                    ·
-                    <a href="{% url 'delete-yarn' yarn.pk %}" style="font-size: 0.75rem; color: #c0392b;">delete</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'update-yarn' yarn.pk %}" style="font-size: 0.75rem; color: var(--terracotta);">edit</a>
+                        ·
+                        <a href="{% url 'delete-yarn' yarn.pk %}" style="font-size: 0.75rem; color: #c0392b;">delete</a>
+                    {% endif %}
                 </div>
             {% empty %}
                 <p class="empty">No yarn added yet.</p>
             {% endfor %}
         </div>
-
+{% if user.is_authenticated %}
         <div class="action-row">
             <a href="{% url 'update-project' project.pk %}" class="btn btn-secondary">Edit Project</a>
             <a href="{% url 'delete-project' project.pk %}" class="btn btn-danger">Delete Project</a>
         </div>
-
+{% endif %}
         <h2>Reviews</h2>
         <div class="comment-list">
             {% for review in reviews %}
@@ -204,18 +206,19 @@ crochet/project_detail.html
         <div class="action-row" style="margin-top: 1.5rem;">
             <div class="favorites-count">{{ favorites }} ❤️</div>
         </div>
-
+{% if user.is_authenticated %}
         <form method="POST" action="{% url 'favorite-project' project.pk %}" class="favorite-form">
             {% csrf_token %}
             <input type="hidden" name="favoriter" value="anonymous">
             <input type="submit" value="❤️ Add to Favorites">
         </form>
-
+{% endif %}
+{% if user.is_authenticated %}
         <div class="action-row" style="margin-top: 1rem;">
             <a href="{% url 'add-review' project.pk %}" class="btn btn-primary">+ Add Review</a>
             <a href="{% url 'add-yarn' project.pk %}" class="btn btn-sage">+ Add Yarn</a>
         </div>
-
+{% endif %}
     </div>
 
     <!-- RIGHT: sidebar cards -->

@@ -155,8 +155,9 @@ crochet/project_list.html
     <p class="empty">No projects yet. Be the first to add one!</p>
 {% endfor %}
 
+{% if user.is_authenticated %}
 <div style="margin-top: 2rem;">
     <a href="{% url 'create-project' %}" class="btn btn-primary">+ Add New Project</a>
 </div>
-
+{% endif %}
 {% endblock %}
